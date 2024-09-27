@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { apiRequest } from '../utility/api';
-import { useNavigate } from 'react-router-dom';
+import React, { useState,useEffect } from 'react';
+import { apiRequest } from '../utility/Api';
+import { useNavigate ,useLocation} from 'react-router-dom';
 
 const Signup = () => {
     const [firstname, setFirstname] = useState("");
@@ -9,6 +9,17 @@ const Signup = () => {
     const [password, setPassword] = useState("");
     const [phone, setPhone] = useState(""); 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const { firstname, lastname, email, phone ,password} = location.state || {};
+        if (firstname) setFirstname(firstname);
+        if (lastname) setLastname(lastname);
+        if (email) setEmail(email);
+        if (phone) setPhone(phone);
+        if(password) setPassword(password);
+    }, [location.state]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,9 +32,9 @@ const Signup = () => {
         };
 
         try {
-            const response =await apiRequest('POST', '/signup',data);
+            const response =await apiRequest('POST', '/um/user-request',data);
             if (response.status === 200) {
-                navigate("/otpverification", { state: { email } });
+                navigate("/otpverification", { state: { email,firstname,lastname,phone,password} });
             } else if (response.status === 201) {
                 alert("User with entered email already exists.");
             }

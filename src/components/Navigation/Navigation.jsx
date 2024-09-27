@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState,useEffect } from 'react'
 import {
   Dialog,
   DialogBackdrop,
@@ -16,6 +16,7 @@ import {
   TabPanels,
 } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
+
 
 const navigation = {
   categories: [
@@ -141,6 +142,18 @@ const navigation = {
 }
 
 export default function Navigation() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const checkLoginStatus = () => {
+    const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+    setIsLoggedIn(!!token);
+  };
+
+  useEffect(() => {
+    checkLoginStatus();
+  });
+
   const [open, setOpen] = useState(false)
 
   return (
@@ -379,9 +392,16 @@ export default function Navigation() {
 
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <a href="/homesign" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                  {
+                    isLoggedIn?
+                    <a href="/homesign" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                    Log Out
+                    </a>
+                    :<a href="/homesign" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                     Sign in
                   </a>
+                  }
+                  
                   <span aria-hidden="true" className="h-6 w-px bg-gray-200" />
                   <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                     Create account

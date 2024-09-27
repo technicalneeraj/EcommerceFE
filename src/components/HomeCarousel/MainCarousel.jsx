@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
-import {apiRequest} from "../../utility/api";
+import {apiRequest} from "../../utility/Api";
 
 const MainCarousel = () => {
     const [data,setData]=useState([]);

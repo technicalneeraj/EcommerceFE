@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Login from './components/Login';
-import Signup from './components/Signup';
+import Login from './Login';
+import Signup from './SignUp';
 
 const HomeSign = () => {
     const [loginpage,setloginpage]=useState(true);

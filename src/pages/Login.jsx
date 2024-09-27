@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {apiRequest} from "../utility/Api";
 
 
 const Login = () => {
@@ -11,8 +12,8 @@ const Login = () => {
 
     const handleLogin=async(e)=>{
         e.preventDefault();
-        const response=await axios.post("http://localhost:8080/login",{
-            email:email,password:password
+        const response = await apiRequest('POST', '/um/user/login', { email:email,password:password},{ 
+            withCredentials: true
         });
         if(response.status===201){
             alert(response.data.message);
