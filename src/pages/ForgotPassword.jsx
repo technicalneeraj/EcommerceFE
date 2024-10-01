@@ -31,7 +31,7 @@ const Forgotpassword = () => {
             }
         } catch (error) {
             if (error.response.status === 403) {
-                navigate("/homesign");
+                navigate("/login");
             }
             setOtpVerifyMsg(error.response.data.message);
         }
@@ -53,17 +53,17 @@ const Forgotpassword = () => {
         try{
             const response = await apiRequest('PATCH', '/changepassword', { email, newpassword });
             if(response.status==200){
-                navigate("/homesign");
+                navigate("/login");
             }
         }
         catch(error){
             console.log(error);
-            navigate("/homesign");
+            navigate("/login");
         }
     }
 
     return (
-        <div>
+        <div className='text-center'>
             <form>
                 <label htmlFor="user">Enter your registered email</label>&nbsp;
                 <input

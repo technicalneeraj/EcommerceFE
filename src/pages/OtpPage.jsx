@@ -25,20 +25,36 @@ const OtpPage = () => {
         catch (error) {
             setRespmsg(error.response.data.message);
             if(error.response.status==403){
-                navigate("/homesign")
+                navigate("/login")
             }
             if(error.response.status==404){
-                navigate("/homesign")
+                navigate("/login")
             }
         }
     }
 
-    const handleEditClick=()=>{
-        navigate("/signup",{state:{email, firstname, lastname, phone,password}});
-    }
+    const handleEditClick = async () => {
+        try {
+            const response = await axios.delete("http://localhost:8080/deletedataforedit", {
+                data: { email }
+            });
+            
+            if (response.status === 200) {
+                navigate("/register", { state: { email, firstname, lastname, phone, password } });
+            }
+        } catch (error) {
+            if (error.response) {
+                alert(error.response.data.message);
+            } else {
+                alert("An error occurred. Please try again.");
+            }
+            navigate("/login");
+        }
+    };
+    
   return (
-   <div className='mt-5 mb-5'>
-   <form onSubmit={submithandler}>
+   <div className='mt-5 mb-5 text-center'>
+   <form onSubmit={submithandler} className='text-center'>
     <label htmlFor="otp">Enter the otp you recieved on <span className='text-sky-400'><b>{email}</b></span></label>
     <span onClick={handleEditClick} className='bg-blue-400 text-orange-50 ml-3 p-1 cursor-pointer'>Edit</span>
     <br/>
@@ -46,7 +62,7 @@ const OtpPage = () => {
     <button type='submit' className='bg-blue-400 text-white py-3 px-3'>Verify</button>
    </form>
    {
-        respmsg? <div>{respmsg}</div>:<div></div>
+        respmsg? <div className='text-center'>{respmsg}</div>:<div></div>
    }
    
    </div>

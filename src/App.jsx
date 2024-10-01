@@ -7,6 +7,9 @@ import Layout from './Layout.jsx'
 import Login from './pages/Login.jsx'
 import HomeSign from './pages/HomeSign.jsx'
 import Forgotpassword from "./pages/ForgotPassword.jsx"
+import UserData from './pages/UserData.jsx'
+import { AuthProvider } from './utility/AuthContext'
+import AddProduct from './pages/AddProduct.jsx'
 
 function App() {
   
@@ -14,19 +17,22 @@ function App() {
     createRoutesFromElements(
       <Route path='/' element={<Layout/>}>
          <Route path='' element={<Home />} />
-         <Route path="/homesign" element={<HomeSign/>} />
-         <Route path='/signup' element={<Signup/>} />
-         <Route path='/otpverification' element={<OtpPage/>}/>
-         <Route path='/login' element={< Login/>}/>
+         <Route path="/" element={<HomeSign/>} >
+          <Route path='/register' element={<Signup/>} />
+          <Route path='/otpverification' element={<OtpPage/>}/>
+          <Route path='/login' element={< Login/>}/>
+         </Route>
+         <Route path='/userdata' element={<UserData/>}/>
          <Route path='/login/forgotpassword' element={<Forgotpassword/>}/>
+         <Route path='/add-product' element={<AddProduct/>}/>
       </Route>
     )
   )
 
   return (
-    <>
+    <AuthProvider>
     <RouterProvider router={router}/>
-    </>
+    </AuthProvider>
   )
 }
 

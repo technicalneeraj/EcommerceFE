@@ -1,0 +1,9 @@
+@media (max-width: 670px) {
+    .names {
+        display: block;  
+    }
+    .lastname{
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+}

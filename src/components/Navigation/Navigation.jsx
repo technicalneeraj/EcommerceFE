@@ -1,6 +1,8 @@
 'use client'
-
-import { Fragment, useState,useEffect } from 'react'
+import { Fragment, useState } from 'react'
+import Logout from '../../utility/Logout';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../utility/AuthContext';
 import {
   Dialog,
   DialogBackdrop,
@@ -16,6 +18,7 @@ import {
   TabPanels,
 } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon } from '@heroicons/react/24/outline'
+
 
 
 const navigation = {
@@ -142,17 +145,7 @@ const navigation = {
 }
 
 export default function Navigation() {
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const checkLoginStatus = () => {
-    const token = document.cookie.split('; ').find(row => row.startsWith('token='));
-    setIsLoggedIn(!!token);
-  };
-
-  useEffect(() => {
-    checkLoginStatus();
-  });
+  const { isLog, setIsLog } = useAuth();
 
   const [open, setOpen] = useState(false)
 
@@ -322,7 +315,7 @@ export default function Navigation() {
                       <PopoverPanel
                         transition
                         className="absolute inset-x-0 top-full text-sm text-gray-500 transition data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-                      >
+                      > 
                         {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
                         <div aria-hidden="true" className="absolute inset-0 top-1/2 bg-white shadow" />
 
@@ -392,15 +385,19 @@ export default function Navigation() {
 
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  {
-                    isLoggedIn?
-                    <a href="/homesign" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Log Out
-                    </a>
-                    :<a href="/homesign" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Sign in
-                  </a>
-                  }
+                <nav>
+                {isLog?
+                <Logout/>
+                :
+                    <Link 
+                    to="/login"
+                    className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                >
+                    <button>Sign in</button>
+                </Link>
+                }
+              </nav>
+
                   
                   <span aria-hidden="true" className="h-6 w-px bg-gray-200" />
                   <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">
