@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import "./AddProduct.css";
 import CategoryDropdowns from '../components/CatgeoryDropdowns';
 import { apiRequest } from '../utility/Api';
+import { useNavigate } from 'react-router-dom';
 const AddProduct = () => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -14,6 +15,8 @@ const AddProduct = () => {
     const [isFeatured, setIsFeatured] = useState(false);
     const [status, setStatus] = useState('active');
     const [tags, setTags] = useState("");
+    const [loading,setLoading]=useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,7 +25,7 @@ const AddProduct = () => {
         formData.append('description', description);
         formData.append('price', price);
         formData.append('brand', brand);
-        formData.append('category', category); // Use the selected category ID
+        formData.append('category', category);
         formData.append('stock', stock);
         formData.append('isFeatured', isFeatured);
         formData.append('status', status);
@@ -36,16 +39,22 @@ const AddProduct = () => {
         });
 
         try {
+            setLoading(true);
             const response = await apiRequest("POST",'/product/add-product', formData);
-            console.log('Product added:', response.data);
+            if(response.status==201){
+                setLoading(false);
+                navigate("/");
+            }
         } catch (error) {
             console.error('Error adding product:', error);
+            setLoading(false);
         }
     };
 
     return (
         <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow-md">
             <h1 className='text-2xl font-semibold text-center mb-4'>Add New Product</h1>
+            {loading && <div className="loader">Adding Product.....</div>}
             <form className='space-y-4' onSubmit={handleSubmit}>
                 <input
                     type="text"

@@ -9,11 +9,9 @@ const UserData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await apiRequest('GET', '/userdata',{
-            withCredentials: true, // Important to include credentials (cookies)
-          });
+        const response = await apiRequest('GET', '/userdata');
         console.log(response.data.message);
-        setData(response.data.message); // Assuming you want to store this in state
+        setData(response.data.message);
       } catch (error) {
         console.error(error);
         navigate("/");
