@@ -1,13 +1,18 @@
-import {Link, NavLink} from 'react-router-dom'
-import './App.css'
-import Signup from './components/Signup'
-
+import Routes from './Routes.jsx'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import UserAuthContext, { authContext } from './utility/AuthContext';
+import { useContext } from 'react';
 function App() {
-  
-
-  return (
+  const { isLoading } = useContext(authContext);
+  return isLoading ? <>
+    Wait While we set things up for you
+  </> : (
     <>
-    <Signup/> 
+      {/* <UserAuthContext> */}
+      <Routes />
+      <ToastContainer />
+      {/* </UserAuthContext> */}
     </>
   )
 }
