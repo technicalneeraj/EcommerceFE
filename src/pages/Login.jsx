@@ -1,28 +1,32 @@
 import React from 'react';
 import { useState } from 'react';
-import { Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate,useLocation} from 'react-router-dom';
 import {apiRequest} from "../utility/Api";
-import { useAuth } from '../utility/AuthContext';
-
+import { toast } from 'react-toastify';
+import { useContext } from 'react';
+import { authContext } from '../utility/AuthContext';
 
 const Login = () => {
-    const { setIsLog } = useAuth();
+    const { setIsLog } = useContext(authContext);
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const navigate = useNavigate();
+    const location = useLocation();
 
 
     const handleLogin=async(e)=>{
         e.preventDefault();
         const response = await apiRequest('POST', '/um/user/login', { email:email,password:password});
         if(response.status===201){
-            alert(response.data.message);
+            setIsLog(false);
+            toast.error(response.data.message);
         }
         if(response.status===200){
+          toast.success(response.data.message);
           setIsLog(true);
-          navigate("/");
+          const from = location.state?.from || '/';
+          navigate(from);
         }
-        console.log(response.data.message);
     }
     const createaccounthandler=()=>{
         navigate("/register",{ state: { alreadyhave: false } });

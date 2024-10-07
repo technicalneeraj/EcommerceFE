@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Login from './Login';
-import Signup from './SignUp';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 
 const HomeSign = () => {

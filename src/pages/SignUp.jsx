@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../utility/Api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import "./signup.css";
+import { toast } from 'react-toastify';
 
 const Signup = () => {
     const [firstname, setFirstname] = useState("");
@@ -44,11 +45,10 @@ const Signup = () => {
             if (response.status === 200) {
                 navigate("/otpverification", { state: { email, firstname, lastname, phone, password } });
             } else if (response.status === 201) {
-                alert("User with entered email already exists.");
+               toast.error("User with entered email already exists.");
             }
         } catch (error) {
-            console.error("Error during signup:", error);
-            alert("An error occurred. Please try again.");
+           toast.error("An error occurred. Please try again.");
         }
     };
 

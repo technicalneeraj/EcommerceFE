@@ -1,25 +1,50 @@
-import React, { createContext, useContext, useState ,useEffect} from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import { apiRequest } from './Api';
 
-const AuthContext = createContext();
+export const authContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export default function UserAuthContext({ children }) {
+    const token = Cookies.get('accessToken');
     const [isLog, setIsLog] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [userData, setUserData] = useState(null);
+    const verifyToken = async () => {
+        try {
+            setIsLoading(true);
+            const response = await apiRequest("GET", '/api/auth/verify-token', null, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
+            if (response.status === 200) {
+                setIsLog(true);
+                setIsLoading(false);
+                setUserData(response.data.user);
+            } else {
+                setIsLog(false);
+                setIsLoading(false);
+                setUserData(null);
+            }
+        } catch (error) {
+            console.error('Token verification failed:', error);
+            setIsLog(false);
+            setIsLoading(false);
+            setUserData(null);
+        }
+    };
     useEffect(() => {
-        const token = Cookies.get('accessToken');
         if (token) {
-            setIsLog(true);
+            verifyToken();
+        } else {
+            setIsLog(false);
+            setIsLoading(false);
         }
     }, []);
-
     return (
-        <AuthContext.Provider value={{ isLog, setIsLog }}>
+        <authContext.Provider value={{ isLog, isLoading, userData, setIsLog, setUserData }}>
             {children}
-        </AuthContext.Provider>
+        </authContext.Provider>
     );
-};
-
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
+}

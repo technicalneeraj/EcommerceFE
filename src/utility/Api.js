@@ -8,12 +8,13 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
-export const apiRequest = async (method, endpoint, data = null) => {
+export const apiRequest = async (method, endpoint, data = null, customConfig = {}) => {
     try {
         const config = {
             method,
             url: endpoint,
             ...(data && { data }),
+            ...customConfig, 
         };
 
         const response = await apiClient(config);

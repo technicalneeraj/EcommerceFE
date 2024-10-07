@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import axios from "axios";
-import { useNavigate, useLocation,Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { apiRequest } from '../utility/Api';
+import { toast } from 'react-toastify';
 
 const OtpPage = () => {
     const location = useLocation();
@@ -16,13 +17,15 @@ const OtpPage = () => {
             email
         }
         try{
-            const response=await axios.post("http://localhost:8080/um/user-request/verifyOTP",data);
+            const response=await apiRequest("POST","/um/user-request/verify-OTP",data);
             setRespmsg(response.data.message);
             if(response.status==200){
+                toast.success("Your Account Successfully Created");
                 navigate("/login");
             }
         }
         catch (error) {
+            toast.error(error.response.data.message);
             setRespmsg(error.response.data.message);
             if(error.response.status==403){
                 navigate("/login")
@@ -35,7 +38,7 @@ const OtpPage = () => {
 
     const handleEditClick = async () => {
         try {
-            const response = await axios.delete("http://localhost:8080/deletedataforedit", {
+            const response = await apiRequest("DELETE","/delete-data-for-edit", {
                 data: { email }
             });
             
@@ -44,9 +47,9 @@ const OtpPage = () => {
             }
         } catch (error) {
             if (error.response) {
-                alert(error.response.data.message);
+                toast.error(error.response.data.message);
             } else {
-                alert("An error occurred. Please try again.");
+                toast.error("An error occurred. Please try again.");
             }
             navigate("/login");
         }

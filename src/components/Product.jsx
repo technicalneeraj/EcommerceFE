@@ -9,7 +9,7 @@ const Product = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await apiRequest("GET", "/product/allproduct");
+                const response = await apiRequest("GET", "/product");
                 if (response.status === 200) {
                     setData(response.data.message);
                 }

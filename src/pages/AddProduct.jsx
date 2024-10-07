@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import "./AddProduct.css";
 import CategoryDropdowns from '../components/CatgeoryDropdowns';
 import { apiRequest } from '../utility/Api';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const AddProduct = () => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -38,15 +39,16 @@ const AddProduct = () => {
             formData.append('otherImages', image);
         });
 
-        try {
+        try {// const {addingCategories}=require("./utils/addingCategory");
             setLoading(true);
-            const response = await apiRequest("POST",'/product/add-product', formData);
+            const response = await apiRequest("POST",'/product', formData);
             if(response.status==201){
+                toast.error(response.data.message);
                 setLoading(false);
                 navigate("/");
             }
         } catch (error) {
-            console.error('Error adding product:', error);
+            toast.error(error.response.data.message);
             setLoading(false);
         }
     };

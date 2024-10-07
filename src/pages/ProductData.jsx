@@ -5,6 +5,8 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import XIcon from '@mui/icons-material/X';
+import { toast } from 'react-toastify';
+
 const ProductData = () => {
     const { id } = useParams();
     const [data, setData] = useState({});
@@ -17,19 +19,20 @@ const ProductData = () => {
             try {
                 setLoading(true);
 
-                const response = await apiRequest("GET", `/product/getsingleproduct/${id}`);
+                const response = await apiRequest("GET", `/product/${id}`);
                 setData(response.data.product);
+                console.log(response.data.product.category);
                 if (response.data.product.category) {
                     const catResponse = await apiRequest("GET", `/product/category/${response.data.product.category}`);
                     setCategory(catResponse.data.category.name);
                 }
-                const tagsArray = response.data.product.tags[0].split(','); // Assuming tags is the string you received
+                const tagsArray = response.data.product.tags[0].split(','); 
                 setTags(tagsArray);
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
                 console.log(error);
-                alert("Error fetching product data");
+               toast.error("Error fetching product data");
             }
         };
 

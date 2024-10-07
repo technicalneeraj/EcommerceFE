@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { apiRequest } from "../utility/Api";
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 
 const Forgotpassword = () => {
     const navigate = useNavigate();
@@ -14,23 +15,26 @@ const Forgotpassword = () => {
     const forgothandler = async (e) => {
         e.preventDefault();
         try {
-            const response = await apiRequest('POST', '/forgototpsender', { email });
+            const response = await apiRequest('POST', '/forgot-password-otp', { email });
+            toast.success(response.data.message);
             setOtpclicked(true);
         } catch (error) {
-            alert(error.response.data.message);
+            toast(error.response.data.message);
         }
     }
 
     const otpverifyhandler = async (e) => {
         e.preventDefault();
         try {
-            const response = await apiRequest('POST', '/forgototpverify', { email, otp });
+            const response = await apiRequest('POST', '/forgot-OTP-verify', { email, otp });
             if (response.status === 200) {
+                toast.success(response.data.message);
                 setVerified(true);
                 setOtpVerifyMsg(response.data.message);
             }
         } catch (error) {
             if (error.response.status === 403) {
+                toast.error(error.response.data.message);
                 navigate("/login");
             }
             setOtpVerifyMsg(error.response.data.message);
@@ -51,13 +55,14 @@ const Forgotpassword = () => {
     const newpasswordchange=async(e)=>{
         e.preventDefault();
         try{
-            const response = await apiRequest('PATCH', '/changepassword', { email, newpassword });
+            const response = await apiRequest('PATCH', '/change-password', { email, newpassword });
             if(response.status==200){
+                toast.success(response.data.message);
                 navigate("/login");
             }
         }
         catch(error){
-            console.log(error);
+            toast.error(error);
             navigate("/login");
         }
     }

@@ -10,7 +10,6 @@ const UserData = () => {
     const fetchData = async () => {
       try {
         const response = await apiRequest('GET', '/userdata');
-        console.log(response.data.message);
         setData(response.data.message);
       } catch (error) {
         console.error(error);

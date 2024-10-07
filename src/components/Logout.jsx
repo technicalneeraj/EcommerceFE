@@ -1,9 +1,9 @@
 import React from 'react';
-import { apiRequest } from './Api';
-import { useAuth } from './AuthContext';
-
+import { apiRequest } from '../utility/Api';
+import { useContext } from 'react';
+import { authContext } from '../utility/AuthContext';
 const Logout = () => {
-    const { setIsLog } = useAuth();
+    const { setIsLog } =  useContext(authContext);
 
     const handleLogout = async () => {
         try {

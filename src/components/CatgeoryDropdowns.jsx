@@ -2,112 +2,99 @@ import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../utility/Api';
 
 const CategoryDropdowns = ({ setCategory }) => {
-    const [level1Categories, setLevel1Categories] = useState([]);
-    const [level2Categories, setLevel2Categories] = useState([]);
-    const [level3Categories, setLevel3Categories] = useState([]);
-    const [selectedLevel1, setSelectedLevel1] = useState('');
-    const [selectedLevel2, setSelectedLevel2] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [filteredCategories, setFilteredCategories] = useState([]);
+    const [selectedSuperParent, setSelectedSuperParent] = useState('');
+    const [selectedSubCategory, setSelectedSubCategory] = useState('');
+    const [selectedChild, setSelectedChild] = useState('');
+
+    const superParents = [
+        { id: 'men', name: 'Men' },
+        { id: 'women', name: 'Women' },
+        { id: 'kids', name: 'Kids' }
+    ];
+
+    // Hardcoded subcategories
+    const subCategories = {
+        men: ['Upper', 'Lower'],
+        women: ['Upper', 'Lower'],
+        kids: ['Upper', 'Lower'],
+    };
 
     useEffect(() => {
-        const fetchLevel1Categories = async () => {
+        const fetchCategories = async () => {
             try {
-                const response = await apiRequest("GET",'/api/categories/level1');
-                console.log(response)
+                const response = await apiRequest("GET", '/api/categories');
                 if (Array.isArray(response.data)) {
-                    setLevel1Categories(response.data);
+                    console.log(response.data);
+                    // setCategories(response.data);
                 } else {
                     console.error('Expected an array of categories, got:', response.data);
                 }
             } catch (error) {
-                console.error('Error fetching Level 1 categories:', error);
+                console.error('Error fetching categories:', error);
             }
         };
-        fetchLevel1Categories();
+        fetchCategories();
     }, []);
 
-    const handleLevel1Change = async (e) => {
+    const handleSuperParentChange = (e) => {
         const selected = e.target.value;
-        setSelectedLevel1(selected);
-        setSelectedLevel2(''); // Reset Level 2 and 3 when Level 1 changes
+        setSelectedSuperParent(selected);
+        setSelectedSubCategory('');
+        setSelectedChild('');
+        setFilteredCategories([]);
+
         if (selected) {
-            try {
-                const response = await  apiRequest("GET",`/api/categories/level2/${selected}`);
-                if (Array.isArray(response.data)) {
-                    setLevel2Categories(response.data);
-                } else {
-                    console.error('Expected an array of Level 2 categories, got:', response.data);
-                }
-            } catch (error) {
-                console.error('Error fetching Level 2 categories:', error);
-            }
-        } else {
-            setLevel2Categories([]);
-            setLevel3Categories([]);
+            const filtered = categories.filter(category => 
+                category.parent.includes(selected)
+            );
+            setFilteredCategories(filtered);
         }
     };
 
-    const handleLevel2Change = async (e) => {
+    const handleSubCategoryChange = (e) => {
         const selected = e.target.value;
-        setSelectedLevel2(selected);
-
-        if (selected) {
-            try {
-                const response = await apiRequest("GET",`/api/categories/level3/${selected}`);
-                if (Array.isArray(response.data)) {
-                    setLevel3Categories(response.data);
-                } else {
-                    console.error('Expected an array of Level 3 categories, got:', response.data);
-                }
-            } catch (error) {
-                console.error('Error fetching Level 3 categories:', error);
-            }
-        } else {
-            setLevel3Categories([]);
-        }
+        setSelectedSubCategory(selected);
+        setSelectedChild('');
     };
 
-    const handleLevel3Change = (e) => {
-        setCategory(e.target.value); // Update the selected category in the parent component
+    const handleChildChange = (e) => {
+        const selected = e.target.value;
+        setSelectedChild(selected);
+        setCategory(selected); 
     };
 
     return (
         <div className="flex flex-col space-y-4">
-            <select onChange={handleLevel1Change} value={selectedLevel1} className="p-2 border border-gray-300 rounded">
-                <option value="">Select Level 1 Category</option>
-                {level1Categories.length > 0 ? (
-                    level1Categories.map((category) => (
-                        <option key={category._id} value={category._id}>
-                            {category.name}
-                        </option>
-                    ))
-                ) : (
-                    <option disabled>No Level 1 Categories Available</option>
-                )}
+            <select onChange={handleSuperParentChange} value={selectedSuperParent} className="p-2 border border-gray-300 rounded">
+                <option value="">Select Super Parent Category</option>
+                {superParents.map(parent => (
+                    <option key={parent.id} value={parent.id}>
+                        {parent.name}
+                    </option>
+                ))}
             </select>
 
-            <select onChange={handleLevel2Change} value={selectedLevel2} disabled={!selectedLevel1} className="p-2 border border-gray-300 rounded">
-                <option value="">Select Level 2 Category</option>
-                {level2Categories.length > 0 ? (
-                    level2Categories.map((category) => (
-                        <option key={category._id} value={category._id}>
-                            {category.name}
-                        </option>
-                    ))
-                ) : (
-                    <option disabled>No Level 2 Categories Available</option>
-                )}
+            <select onChange={handleSubCategoryChange} value={selectedSubCategory} disabled={!selectedSuperParent} className="p-2 border border-gray-300 rounded">
+                <option value="">Select Sub Category</option>
+                {selectedSuperParent && subCategories[selectedSuperParent]?.map((subCat, index) => (
+                    <option key={index} value={subCat}>
+                        {subCat}
+                    </option>
+                ))}
             </select>
 
-            <select onChange={handleLevel3Change} disabled={!selectedLevel2} className="p-2 border border-gray-300 rounded">
-                <option value="">Select Level 3 Category</option>
-                {level3Categories.length > 0 ? (
-                    level3Categories.map((category) => (
+            <select onChange={handleChildChange} value={selectedChild} disabled={!selectedSubCategory} className="p-2 border border-gray-300 rounded">
+                <option value="">Select Child Category</option>
+                {filteredCategories.length > 0 ? (
+                    filteredCategories.map(category => (
                         <option key={category._id} value={category._id}>
-                            {category.name}
+                            {category.type}
                         </option>
                     ))
                 ) : (
-                    <option disabled>No Level 3 Categories Available</option>
+                    <option disabled>No Child Categories Available</option>
                 )}
             </select>
         </div>
