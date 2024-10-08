@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import "./AddProduct.css";
+
 import CategoryDropdowns from '../components/CatgeoryDropdowns';
 import { apiRequest } from '../utility/Api';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,8 @@ const AddProduct = () => {
     const [mainImage, setMainImage] = useState(null);
     const [otherImages, setOtherImages] = useState([]);
     const [isFeatured, setIsFeatured] = useState(false);
+    const [parentCategory,setParentCategory]=useState("");
+    const [subParentCategory,setSubParentCategory]=useState("");
     const [status, setStatus] = useState('active');
     const [tags, setTags] = useState("");
     const [loading,setLoading]=useState(false);
@@ -27,6 +29,8 @@ const AddProduct = () => {
         formData.append('price', price);
         formData.append('brand', brand);
         formData.append('category', category);
+        formData.append('P1category', parentCategory);
+        formData.append('P2category', subParentCategory);
         formData.append('stock', stock);
         formData.append('isFeatured', isFeatured);
         formData.append('status', status);
@@ -39,11 +43,11 @@ const AddProduct = () => {
             formData.append('otherImages', image);
         });
 
-        try {// const {addingCategories}=require("./utils/addingCategory");
+        try {
             setLoading(true);
             const response = await apiRequest("POST",'/product', formData);
             if(response.status==201){
-                toast.error(response.data.message);
+                toast.success(response.data.message);
                 setLoading(false);
                 navigate("/");
             }
@@ -90,7 +94,7 @@ const AddProduct = () => {
                     className='w-full p-2 border border-gray-300 rounded'
                 />
                 
-                <CategoryDropdowns setCategory={setCategory} />
+                <CategoryDropdowns setCategory={setCategory} setParentCategory={setParentCategory} setSubParentCategory={setSubParentCategory}/>
 
                 <input
                     type="number"

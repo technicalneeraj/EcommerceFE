@@ -14,6 +14,7 @@ import { Navigate } from 'react-router-dom';
 import Profile from './pages/Profile.jsx';
 import { useContext } from 'react';
 import CatgeoryAdd from './pages/CatgeoryAdd.jsx';
+import NotFound from './pages/NotFound.jsx';
 // import ProtectedRoute from './ProtectedRoute.js';
 
 function Routes() {
@@ -38,6 +39,7 @@ function Routes() {
         {/* <Route element={<ProtectedRoute />}> */}
           <Route path='/add-product' element={isLog? <AddProduct />:<Navigate to="/login" state={{ from: '/add-product' }}/> } />
         {/* </Route> */}
+        <Route path="*" element={<NotFound />} />
       </Route>
       
     )

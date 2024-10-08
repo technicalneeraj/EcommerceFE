@@ -9,6 +9,7 @@ export default function UserAuthContext({ children }) {
     const [isLog, setIsLog] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState(null);
+    const [userRole,setUserRole]=useState("");
     const verifyToken = async () => {
         try {
             setIsLoading(true);
@@ -22,16 +23,19 @@ export default function UserAuthContext({ children }) {
                 setIsLog(true);
                 setIsLoading(false);
                 setUserData(response.data.user);
+                setUserRole(response.data.user.role);
             } else {
                 setIsLog(false);
                 setIsLoading(false);
                 setUserData(null);
+                setUserRole("");
             }
         } catch (error) {
             console.error('Token verification failed:', error);
             setIsLog(false);
             setIsLoading(false);
             setUserData(null);
+            setUserRole("");
         }
     };
     useEffect(() => {
@@ -43,7 +47,7 @@ export default function UserAuthContext({ children }) {
         }
     }, []);
     return (
-        <authContext.Provider value={{ isLog, isLoading, userData, setIsLog, setUserData }}>
+        <authContext.Provider value={{ isLog, isLoading, userData, setIsLog, setUserData ,setUserRole,userRole}}>
             {children}
         </authContext.Provider>
     );

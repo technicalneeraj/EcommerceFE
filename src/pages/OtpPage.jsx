@@ -27,10 +27,13 @@ const OtpPage = () => {
         catch (error) {
             toast.error(error.response.data.message);
             setRespmsg(error.response.data.message);
-            if(error.response.status==403){
+            if(error.response.status==410){
                 navigate("/login")
             }
             if(error.response.status==404){
+                navigate("/login")
+            }
+            if(error.response.status==423){
                 navigate("/login")
             }
         }
@@ -62,7 +65,7 @@ const OtpPage = () => {
     <span onClick={handleEditClick} className='bg-blue-400 text-orange-50 ml-3 p-1 cursor-pointer'>Edit</span>
     <br/>
     <input type='text' id='otp' value={otp} onChange={(e)=>setOtp(e.target.value)} className='py-3 px-3 mt-5' placeholder="Enter otp..."></input>
-    <button type='submit' className='bg-blue-400 text-white py-3 px-3'>Verify</button>
+    <button type='submit' className='bg-blue-400 text-white py-3 ml-2 px-3'>Verify</button>
    </form>
    {
         respmsg? <div className='text-center'>{respmsg}</div>:<div></div>

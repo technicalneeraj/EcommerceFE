@@ -29,8 +29,11 @@ const Signup = () => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!firstname || !lastname || !email || !password || !phone) {
+            return toast.error("Please enter all the details.");
+        }
         if (password !== confirmpassword) {
-            return alert("Password didn't match");
+            return toast.error("Password didn't match");
         }
         const data = {
             firstname,
@@ -53,44 +56,44 @@ const Signup = () => {
     };
 
     return (
-        <div className="flex mx-20 my-4 justify-center ">
+        <div className="flex justify-center ">
             <form className='flex flex-col' onSubmit={handleSubmit}>
-                <span className='names'>
+                <div className='flex flex-wrap'>
                     <input
                         type='text'
                         value={firstname}
                         onChange={(e) => setFirstname(e.target.value)}
-                        className='bg-slate-300 mb-4'
+                        className='p-2 rounded-xl  border border-gray-300 focus:ring'
                         placeholder=' First Name*'
                     />
                     <input
                         type='text'
                         value={lastname}
                         onChange={(e) => setLastname(e.target.value)}
-                        className='bg-slate-300 mb-4 ml-4 lastname'
+                        className='lastname border border-gray-300 p-2 rounded-xl focus:ring'
                         placeholder=' Last Name*'
                     />
-                </span>
+                </div>
                 <input
                     type='email'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     id='email'
-                    className='bg-slate-300 mb-4 mt-4'
+                    className='mt-4 p-2  border border-gray-300 rounded-xl focus:ring'
                     placeholder=' Email Id*'
                 />
                 <input
                     type='password'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className='bg-slate-300 mb-4 mt-4'
+                    className='mt-4 p-2 rounded-xl  border border-gray-300  focus:ring'
                     placeholder=' Choose New Password*'
                 />
                 <input
                     type='password'
                     value={confirmpassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className='bg-slate-300 mb-4 mt-4'
+                    className='border border-gray-300 mt-4 p-2 rounded-xl focus:ring'
                     placeholder=' Confirm Password*'
                 />
                 <input
@@ -98,13 +101,13 @@ const Signup = () => {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder=' Mobile Number(For order status update)*'
-                    className='bg-slate-300 mb-4 mt-4'
+                    className='  border border-gray-300 mb-4 mt-4 p-2 rounded-xl focus:ring'
                 />
 
 
-                <button type='submit' className='bg-green-800 text-orange-50'>Register</button>
+                <button type='submit' className='bg-green-800 text-orange-50 p-2 rounded-xl'>Register</button>
                 <div className='mt-4 text-center'>
-                    Already a Customer?
+                    Already a Customer?&nbsp;
                     <span
                         onClick={alreadyaccount}
                         className='underline text-red-500 cursor-pointer'>

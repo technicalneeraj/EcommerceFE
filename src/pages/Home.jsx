@@ -6,20 +6,20 @@ import Product from '../components/Product';
 
 const Home = () => {
   const [data, setData] = useState([]);
-  useEffect(()=>{
-    const fetchcategories=async()=>{
-      const response=await apiRequest("GET","/api/categories");
-      if(response.status==200){
+  useEffect(() => {
+    const fetchcategories = async () => {
+      const response = await apiRequest("GET", "/api/categories");
+      if (response.status == 200) {
         setData(response.data)
       }
     }
     fetchcategories();
   });
- 
+
 
   return (
     <>
-      <MainCarousel />
+      <MainCarousel/>
       <h1 className='text-2xl font-extrabold py-5 text-center'>Categories</h1>
       <div className='flex flex-wrap justify-center'>
         {

@@ -1,26 +1,61 @@
 import React, { useState } from 'react'
 import { apiRequest } from '../utility/Api';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useContext } from 'react';
 import { authContext } from '../utility/AuthContext';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const Profile = () => {
-    const { userData } = useContext(authContext);
+    const navigate = useNavigate();
+    const { userData, setIsLog } = useContext(authContext);
     const [firstname, setfirstname] = useState(userData.firstname);
     const [lastname, setlastname] = useState(userData.lastname);
     const [phone, setPhone] = useState(userData.phone);
     const [address, setAddress] = useState(userData.address.length > 0 ? userData.address[0] : null)
-
-    const savehandler = async(e) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const savehandler = async (e) => {
         e.preventDefault();
-        const data={
-            email:userData.email,
+        const data = {
+            email: userData.email,
             firstname,
             lastname,
             phone,
-            // address,
         }
-        const response=await apiRequest("POST","/um/user/update-profile",data);
-        console.log(response);
+        try{
+        const response = await apiRequest("POST", "/um/user/update-profile", data);
+        if(response.status==200){
+        toast.success("Your Account Successfully Updated")
+        }
+        }
+        catch(error){
+            toast.error("Something went wrong :( Please try again later")
+        }
+
+    }
+
+    const logOutHandler = async () => {
+        try {
+            await apiRequest("POST", "/um/logout");
+            setIsLog(false);
+            toast.success("You logged out");
+            navigate("/");
+        }
+        catch (error) {
+            toast.error(error.response.message);
+        }
+    }
+    const deleteAccountHandler = async () => {
+        try {
+            const response = await apiRequest("DELETE", "/um/deleteAccount", userData);
+            if (response.status == 200) {
+                setIsLog(false);
+                toast.success("Your Account Deleted Successfully");
+                navigate("/");
+            }
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
 
     }
     return (
@@ -31,8 +66,8 @@ const Profile = () => {
                         <div className='capitalize'>{firstname + " " + lastname}</div>
                         <div>{userData.email}</div>
                     </div>
-                    <button className='border border-red-600 text-rose-700 p-3 hover:bg-red-600 hover:text-white'>DELETE MY ACCOUNT</button>
-                    <button className='border border-red-600 text-rose-700 p-3 hover:bg-red-600 hover:text-white'>LOGOUT</button>
+                    <button  onClick={() => setIsModalOpen(true)} className='border border-red-600 text-rose-700 p-3 hover:bg-red-600 hover:text-white'>DELETE MY ACCOUNT</button>
+                    <button onClick={logOutHandler} className='border border-red-600 text-rose-700 p-3 hover:bg-red-600 hover:text-white'>LOGOUT</button>
                 </div>
                 <div className='flex flex-col mb-3'>
                     <div>
@@ -63,7 +98,7 @@ const Profile = () => {
                                     <div>Default Address</div>
                                     <div className='cursor-pointer hover:text-blue-500'>Edit</div>
                                 </div>
-                                <input type='text' value={address? address : "No default address"} disabled onChange={(e) => setAddress(e.target.value)} className=" border p-2 rounded-xl capitalize"></input>
+                                <input type='text' value={address ? address : "No default address"} disabled onChange={(e) => setAddress(e.target.value)} className=" border p-2 rounded-xl capitalize"></input>
                             </div>
                         </div>
                     </div>
@@ -72,6 +107,14 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
+            <ConfirmationModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={() => {
+                    deleteAccountHandler();
+                    setIsModalOpen(false); // Close the modal after confirming
+                }}
+            />
         </>
     )
 }
