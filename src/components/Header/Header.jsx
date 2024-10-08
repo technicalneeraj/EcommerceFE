@@ -18,14 +18,14 @@ const Header = () => {
   const navigate = useNavigate();
   return (
     <>
-      <div className='w-full h-8 bg-red-600'>
-        <div className='flex  text-white justify-center w-1/2'>
-          <div className='border border-black h-8 px-3 cursor-pointer'>Men</div>
-          <div className='border border-black h-8 px-3 cursor-pointer'>Women</div>
-          <div className='border border-black h-8 px-3 cursor-pointer'>Kids</div>
+      <div className='w-full h-12 bg-red-600'>
+        <div className='flex text-white justify-center w-1/2'>
+          <div className='border border-black h-12 px-5 pt-2 cursor-pointer text-center font-bold'>Women</div>
+          <div className='border border-black h-12 px-5 pt-2 cursor-pointer font-bold'>Men</div>
+          <div className='border border-black h-12 px-5 pt-2 cursor-pointer font-bold'>Kids</div>
         </div>
       </div>
-      <div className='w-full justify-between flex h-8 items-center bg-white relative '>
+      <div className=' w-full justify-between flex p-6 items-center bg-white relative '>
         <div className='flex space-x-7 ml-4 h-full items-center'>
           <div onClick={() => navigate("/")} className='cursor-pointer'>Shoper</div>
         <div>

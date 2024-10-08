@@ -1,33 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../utility/Api';
 
-const CategoryDropdowns = ({ setCategory }) => {
+const CategoryDropdowns = ({ setCategory ,setParentCategory,setSubParentCategory}) => {
     const [categories, setCategories] = useState([]);
-    const [filteredCategories, setFilteredCategories] = useState([]);
     const [selectedSuperParent, setSelectedSuperParent] = useState('');
     const [selectedSubCategory, setSelectedSubCategory] = useState('');
     const [selectedChild, setSelectedChild] = useState('');
 
     const superParents = [
-        { id: 'men', name: 'Men' },
-        { id: 'women', name: 'Women' },
-        { id: 'kids', name: 'Kids' }
+        { id: 'men', name: 'men' },
+        { id: 'women', name: 'women' },
+        { id: 'kids', name: 'kids' }
     ];
-
-    // Hardcoded subcategories
-    const subCategories = {
-        men: ['Upper', 'Lower'],
-        women: ['Upper', 'Lower'],
-        kids: ['Upper', 'Lower'],
-    };
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const response = await apiRequest("GET", '/api/categories');
                 if (Array.isArray(response.data)) {
-                    console.log(response.data);
-                    // setCategories(response.data);
+                    setCategories(response.data);
                 } else {
                     console.error('Expected an array of categories, got:', response.data);
                 }
@@ -43,14 +34,6 @@ const CategoryDropdowns = ({ setCategory }) => {
         setSelectedSuperParent(selected);
         setSelectedSubCategory('');
         setSelectedChild('');
-        setFilteredCategories([]);
-
-        if (selected) {
-            const filtered = categories.filter(category => 
-                category.parent.includes(selected)
-            );
-            setFilteredCategories(filtered);
-        }
     };
 
     const handleSubCategoryChange = (e) => {
@@ -63,6 +46,8 @@ const CategoryDropdowns = ({ setCategory }) => {
         const selected = e.target.value;
         setSelectedChild(selected);
         setCategory(selected); 
+        setParentCategory(selectedSuperParent);
+        setSubParentCategory(selectedSubCategory);
     };
 
     return (
@@ -70,7 +55,7 @@ const CategoryDropdowns = ({ setCategory }) => {
             <select onChange={handleSuperParentChange} value={selectedSuperParent} className="p-2 border border-gray-300 rounded">
                 <option value="">Select Super Parent Category</option>
                 {superParents.map(parent => (
-                    <option key={parent.id} value={parent.id}>
+                    <option key={parent.id} value={parent.name}>
                         {parent.name}
                     </option>
                 ))}
@@ -78,18 +63,15 @@ const CategoryDropdowns = ({ setCategory }) => {
 
             <select onChange={handleSubCategoryChange} value={selectedSubCategory} disabled={!selectedSuperParent} className="p-2 border border-gray-300 rounded">
                 <option value="">Select Sub Category</option>
-                {selectedSuperParent && subCategories[selectedSuperParent]?.map((subCat, index) => (
-                    <option key={index} value={subCat}>
-                        {subCat}
-                    </option>
-                ))}
+                    <option key={1} value="lower">lower</option>
+                    <option key={2} value="upper">upper</option>
             </select>
 
             <select onChange={handleChildChange} value={selectedChild} disabled={!selectedSubCategory} className="p-2 border border-gray-300 rounded">
                 <option value="">Select Child Category</option>
-                {filteredCategories.length > 0 ? (
-                    filteredCategories.map(category => (
-                        <option key={category._id} value={category._id}>
+                {categories.length > 0 ? (
+                    categories.map(category => (
+                        <option key={category._id} value={category.type}>
                             {category.type}
                         </option>
                     ))

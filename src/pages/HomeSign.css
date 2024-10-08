@@ -1,0 +1,13 @@
+@media (max-width: 630px) {
+    .outest{
+        background-color:white;
+    }
+}
+@media (max-width: 387px) {
+    .buttons{
+        display:flex;
+        flex-direction:column;
+        justify-content: center;
+        align-items: center;
+    }
+}

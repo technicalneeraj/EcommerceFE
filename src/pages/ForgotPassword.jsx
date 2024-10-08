@@ -68,15 +68,16 @@ const Forgotpassword = () => {
     }
 
     return (
-        <div className='text-center'>
+        <div className='text-center bg-gray-200 ml-20 mr-20 p-40 pt-3'>
+            <div className='font-extrabold text-xl'>Forgot Password? Dont worry !! Fill your details below</div>
             <form>
-                <label htmlFor="user">Enter your registered email</label>&nbsp;
                 <input
                     type='email'
                     value={email}
                     onChange={(e) => { setEmail(e.target.value) }}
                     id='user'
-                    className='bg-slate-300 mb-4 mt-4'
+                    className=' mb-4 mt-4 p-3 rounded-xl border border-gray-200'
+                    placeholder='Enter your registered email'
                     disabled={otpclicked}
                 />
                 <br />
@@ -94,11 +95,11 @@ const Forgotpassword = () => {
                     <input
                         type='text'
                         id='otp'
-                        className='ml-2 bg-slate-300'
+                        className='ml-2  p-2 rounded-xl'
                         value={otp}
                         onChange={(e) => setOtp(e.target.value)}
                     />
-                    <button type='submit' className='bg-blue-400 text-orange-50 ml-4 p-2'>Verify</button>
+                    <button type='submit' className='bg-blue-400 text-orange-50 ml-4 p-2 rounded-xl'>Verify</button>
                 </form>
             }
             {
@@ -111,11 +112,11 @@ const Forgotpassword = () => {
                     <input
                         type='text'
                         id='newpassword'
-                        className='ml-2 bg-slate-300'
+                        className='ml-2 bg-slate-300 rounded-xl p-2'
                         value={newpassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                     />
-                    <button type='submit' className='ml-2 bg-blue-400 text-orange-50 p-2'>Save</button>
+                    <button type='submit' className='ml-2 bg-blue-400 text-orange-50 p-3 rounded-xl '>Save</button>
                     </form>
                 </div>
             }
