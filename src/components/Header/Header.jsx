@@ -81,7 +81,7 @@ const Header = () => {
               </div>
             )}
           </div>
-          <div className='cursor-pointer'><FavoriteBorderIcon /></div>
+          <div className='cursor-pointer' onClick={()=>navigate("/mywishlist")}><FavoriteBorderIcon /></div>
           <div className='cursor-pointer'><LocalMallIcon /></div>
         </div>
       </div>

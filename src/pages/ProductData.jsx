@@ -1,103 +1,154 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
-import { apiRequest } from '../utility/Api';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import XIcon from '@mui/icons-material/X';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { apiRequest } from "../utility/Api";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import XIcon from "@mui/icons-material/X";
+import { toast } from "react-toastify";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const ProductData = () => {
-    const { id } = useParams();
-    const [data, setData] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [category, setCategory] = useState("");
-    const [tags,setTags]=useState([]);
+  const { id } = useParams();
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState("");
+  const [tags, setTags] = useState([]);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const sizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+  const [descriptionClick, setDescriptionClick] = useState(false);
 
-    useEffect(() => {
-        const fetchdata = async () => {
-            try {
-                setLoading(true);
+  useEffect(() => {
+    const fetchdata = async () => {
+      try {
+        setLoading(true);
+        const response = await apiRequest("GET", `/product/${id}`);
+        setData(response.data.product);
+        console.log(response.data.product.category);
+        if (response.data.product.category) {
+          const catResponse = await apiRequest(
+            "GET",
+            `/product/category/${response.data.product.category}`
+          );
+          setCategory(catResponse.data.category.type);
+        }
+        const tagsArray = response.data.product.tags[0].split(",");
+        setTags(tagsArray);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+        toast.error("Error fetching product data");
+      }
+    };
 
-                const response = await apiRequest("GET", `/product/${id}`);
-                setData(response.data.product);
-                console.log(response.data.product.category);
-                if (response.data.product.category) {
-                    const catResponse = await apiRequest("GET", `/product/category/${response.data.product.category}`);
-                    setCategory(catResponse.data.category.name);
-                }
-                const tagsArray = response.data.product.tags[0].split(','); 
-                setTags(tagsArray);
-                setLoading(false);
-            } catch (error) {
-                setLoading(false);
-                console.log(error);
-               toast.error("Error fetching product data");
-            }
-        };
+    fetchdata();
+  }, [id]);
 
-        fetchdata();
-    }, [id]);
-
-
-    return (loading) ? <> Loading </> :
-        <>
-            <div className='flex flex-wrap justify-center'>
-                <div className='left1 w-1/2 p-4'>
-                    <div className='flex flex-wrap justify-start'>
-                        {data && data.images && data.images.map((image) => (
-                            <div className='w-1/2 p-2' key={image.url}>
-                                <img src={image.url} alt='imageEXIST' className='w-full h-auto' />
-                            </div>
-                        ))}
-                    </div>
+  const sizeClickHandler = (size) => {
+    setSelectedSize(size);
+  };
+  return loading ? (
+    <> Loading </>
+  ) : (
+    <>
+      <div className="container mx-auto flex justify-center">
+        <div className="left1 p-4">
+          <div className="flex flex-wrap justify-start">
+            {data &&
+              data.images &&
+              data.images.map((image) => (
+                <div className="w-1/2 p-2" key={image.url}>
+                  <img
+                    src={image.url}
+                    alt="imageEXIST"
+                    className="w-full"
+                  />
                 </div>
-                <div className='right1 w-1/2 flex flex-col pt-4'>
-                    <h1>{data.name}</h1>
-                    <h1>{category}</h1>
-                    <hr />
-                    <div className='pt-3'> &#8377; &nbsp;{data.price}</div>
-                    <div>
-                        Quantity
-                        <select className='ml-2'>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
-                        </select>
-                    </div>
-                    <div className='mt-5 flex flex-wrap'>
-                        <button className='bg-red-700 text-white py-2 px-12'>Add to cart</button>
-                        <button className='border border-red-500 py-2 px-7'>&hearts; Add to wishlist</button>
-                    </div>
-                    <div className='mt-3'>
-                        Share &nbsp; <InstagramIcon />&nbsp;
-                        <WhatsAppIcon />&nbsp;
-                        <FacebookIcon />&nbsp;
-                        <XIcon />
-                    </div>
-                    <div className='pt-5 flex flex-wrap pr-5'>
-                        <b>Product Description:</b>
-                        {data.description}
-                    </div>
-                    <div className='mt-2'>
-                        Tags: &nbsp;{tags && tags.map((tag, index) => (
-                            <span key={index}>
-                                #{tag} &nbsp;
-                            </span>
-                        ))}
-                    </div>
-
-                </div>
+              ))}
+          </div>
+        </div>
+        <div className="right1 flex flex-col pt-4 space-y-4">
+          <div>
+            <div className="text-3xl font-extrabold">{data.name}</div>
+            <div className="text-gray-400 pb-3">{category}</div>
+          </div>
+          <hr />
+          <div>
+            <div className="font-extrabold text-2xl">
+              {" "}
+              &#8377; &nbsp;{data.price}
             </div>
-        </>
+            <div className="text-gray-500">MRP incl. of all taxes</div>
+          </div>
+          <div className="font-bold">Please select a size. </div>
+          <div className="flex space-x-3">
+            {sizes.map((size) => (
+              <div
+                key={size}
+                className={`border-2 rounded-3xl pr-3 pl-3 pt-2 pb-2 cursor-pointer 
+                      ${selectedSize === size ? "border-black" : "border-gray-400"}`}
+                onClick={() => sizeClickHandler(size)}
+              >
+                {size}
+              </div>
+            ))}
+          </div>
 
-}
+          <div>
+            Quantity
+            <select className="ml-2 bg-white p-1 border border-gray-300 rounded-l">
+              <option>01</option>
+              <option>02</option>
+              <option>03</option>
+              <option>04</option>
+              <option>05</option>
+              <option>06</option>
+              <option>07</option>
+              <option>08</option>
+              <option>09</option>
+              <option>10</option>
+            </select>
+          </div>
+          <div className="mt-5 flex flex-wrap">
+            <button className="bg-red-700 text-white py-2 px-12 mr-2">
+              Add to cart
+            </button>
+            <button className="border border-red-500 py-2 px-7">
+              <FavoriteBorderIcon /> Add to wishlist
+            </button>
+          </div>
+          <div className="mt-3 flex space-x-2">
+            <div>Share</div>
+            <WhatsAppIcon className="cursor-pointer" />
+            &nbsp;
+            <FacebookIcon className="cursor-pointer" />
+            &nbsp;
+            <XIcon className="cursor-pointer" />
+            &nbsp;
+            <InstagramIcon className="cursor-pointer" />
+          </div>
+          <div className="pt-5">
+            <div
+              className="border w-96 p-2  border-gray-300 cursor-pointer"
+              onClick={() => setDescriptionClick(!descriptionClick)}
+            >
+              <div className="flex justify-between">
+                <div className="font-semibold">Product Description</div>
+                <div>
+                  <KeyboardArrowDownIcon />
+                </div>
+              </div>
+              {descriptionClick && (
+                <div className="mt-2">{data.description}</div> // Remove flex-wrap
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
-export default ProductData
+export default ProductData;

@@ -43,13 +43,18 @@ const Forgotpassword = () => {
 
     const Otpclicked = (e) => {
         e.preventDefault(); 
+        if(email===""){
+            toast.error("Please enter an email");
+        }
+        else{
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (email !== "" && emailPattern.test(email)) {
             forgothandler(e);
         } else {
-            alert("Please enter a valid email address.");
+           toast.error("Please enter an valid email");
         }
+    }
     }
 
     const newpasswordchange=async(e)=>{

@@ -3,6 +3,8 @@ import Card from '../components/Card';
 import MainCarousel from '../components/HomeCarousel/MainCarousel';
 import { apiRequest } from '../utility/Api';
 import Product from '../components/Product';
+import CategoryCard from '../components/CategoryCard';
+
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -24,7 +26,7 @@ const Home = () => {
       <div className='flex flex-wrap justify-center'>
         {
           data.map((single, index) => (
-            <Card imageUrl={single.image} key={index} /> // Using index as key
+            <CategoryCard imageUrl={single.image} key={index} /> // Using index as key
           ))
         }
       </div>
