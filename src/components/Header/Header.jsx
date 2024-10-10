@@ -82,7 +82,7 @@ const Header = () => {
             )}
           </div>
           <div className='cursor-pointer' onClick={()=>navigate("/mywishlist")}><FavoriteBorderIcon /></div>
-          <div className='cursor-pointer'><LocalMallIcon /></div>
+          <div className='cursor-pointer' onClick={()=>navigate("/cart")}><LocalMallIcon /></div>
         </div>
       </div>
     </>

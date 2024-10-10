@@ -26,7 +26,19 @@ const Product = () => {
 
     useEffect(() => {
         const productWithinWishlist = async () => {
-            try {
+            try { useEffect(() => {
+                const productWithinWishlist = async () => {
+                    try {
+                        const response = await apiRequest("GET", "/user/send-wishlist");
+                        if (response.status === 200) {
+                            setWishListdata(response.data.wishlistData);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching wishlist:', error);
+                    }
+                };
+                productWithinWishlist();
+            }, []); 
                 const response = await apiRequest("GET", "/user/send-wishlist");
                 if (response.status === 200) {
                     setWishListdata(response.data.wishlistData);

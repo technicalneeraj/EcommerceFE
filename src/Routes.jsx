@@ -16,6 +16,7 @@ import { useContext } from 'react';
 import CatgeoryAdd from './pages/CatgeoryAdd.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Wishlist from './pages/Wishlist.jsx';
+import Cart from './pages/Cart.jsx';
 // import ProtectedRoute from './ProtectedRoute.js';
 
 function Routes() {
@@ -32,6 +33,7 @@ function Routes() {
           <Route path='/otpverification' element={<OtpPage />} />
           <Route path='/login' element={<Login />} />
         </Route>
+        <Route path='/cart' element={<Cart/>}/>
         <Route path='/mywishlist' element={<Wishlist/>}/>
         <Route path='/profile' element={isLog ? <Profile /> : <Navigate to="/login" state={{ from: '/profile' }} />} />
         <Route path='/product/:id' element={<ProductData />} />
