@@ -57,7 +57,7 @@ const Wishlist = () => {
           </div>
           <div className="flex flex-wrap">
             {wishListItems.length > 0 &&
-              wishListItems.map((item) => <WishlistCard item={item} key={item._id}/>)}
+              wishListItems.map((item) => <WishlistCard item={item} key={item._id} setWishListItems={setWishListItems}/>)}
           </div>
           <div className="mb-9"></div>
         </div>

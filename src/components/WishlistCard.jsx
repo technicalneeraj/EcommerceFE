@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import WishlistToCartModal from "./WishlistToCartModal";
 
-const WishlistCard = ({ item }) => {
+const WishlistCard = ({ item,setWishListItems }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
@@ -23,10 +23,14 @@ const WishlistCard = ({ item }) => {
       toast.error(error.response.data.message);
     }
   };
-
   const addToCart = async () => {
-    const response = await apiRequest("POST", `/user/add-to-cart/${item._id}`);
-    console.log(response);
+    const data={
+     size: selectedSize,
+     quantity:1
+    }
+    const response = await apiRequest("POST", `/user/add-to-cart/${item._id}`,data);
+    await apiRequest("DELETE",`/user/remove-from-wishlist/${item._id}`);
+    toast.success(response.data.message);
   };
   return (
     <>
@@ -65,12 +69,17 @@ const WishlistCard = ({ item }) => {
       </div>
       <WishlistToCartModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={() => {
-          setIsModalOpen(false); 
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedSize("");
         }}
-        selectedSize
-        setSelectedSize
+        onConfirm={() => {
+          setIsModalOpen(false);
+          addToCart();
+        }}
+        selectedSize={selectedSize}
+        setSelectedSize={setSelectedSize}
+        item={item}
       />
     </>
   );

@@ -3,12 +3,16 @@ import { authContext } from "../utility/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
+import YesOrNoModal from "../components/YesOrNoModal";
 
 const Cart = () => {
   const navigate = useNavigate();
   const { isLog } = useContext(authContext);
   const [cart, setCart] = useState("");
   const [items, setItems] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
+  const [removeOrWishlist, setRemoveOrWishlist] = useState(null);
 
   useEffect(() => {
     const fetchingCart = async () => {
@@ -19,68 +23,98 @@ const Cart = () => {
     fetchingCart();
   }, [cart]);
 
-  const removeItemHandler=async(id)=>{
-    const response=await apiRequest("PATCH",`/user/update-cart/${id}`);
+  const removeItemHandler = async (id) => {
+    const response = await apiRequest("PATCH", `/user/update-cart/${id}`);
     toast.success(response.data.message);
-  }
+    const updatedResponse = await apiRequest("GET", "/user/cart");
+    setCart(updatedResponse.data.cart);
+    setItems(updatedResponse.data.cart.cartItems);
+  };
+
+  const addToWishlistHandler = async (id) => {
+    console.log(id);
+    try{
+      const response=await apiRequest("PATCH",`/user/remove-from-cart-add-to-wishlist/${id}`);
+      toast.success("Product added to your wishlist");
+      }catch(error){
+        toast.error(error.response.data.message);
+      }
+  };
+  
 
   return (
     <div>
       <div className="text-center text-gray-700 font-bold">
         MY BAG -------- ADDRESS -------- PAYMENT
       </div>
-      {cart.totalItem != 0 ? (
+      {cart !== undefined && cart.totalItem !== 0 && isLog ?  (
         <div className="flex justify-center p-5">
           <div>
-            {items.length > 0 &&
-              items.map((item) => (
-                <div key={item._id} className="border pb-2 flex flex-col">
-                  <div className="flex">
-                    <div className="h-64 overflow-hidden">
-                      <img
-                        src={item.product.images[0].url}
-                        alt={item.product.name}
-                        className="object-contain cursor-pointer w-full h-full p-2"
-                        onClick={()=>navigate(`/product/${item.product._id}`)}
-                      />
-                    </div>
-                    <div className=" w-full">
-                      <div className="flex justify-between p-3">
-                        <div>
-                          <div className="font-bold">{item.product.name}</div>
-                          <div className="text-gray-400">{item.product.category.type}</div>
-                          <div className="flex font-bold mt-4">
-                            <div className="border border-black mr-2 rounded p-2 pr-5">
-                              Size: {item.size}
-                            </div>
-                            <div className="border border-black rounded p-2 pr-5">
-                              Qty: {item.quantity}
-                            </div>
-                          </div>
+            {items.map((item) => (
+              <div key={item._id} className="border pb-2 flex flex-col">
+                <div className="flex">
+                  <div className="h-64 overflow-hidden">
+                    <img
+                      src={item.product.images[0].url}
+                      alt={item.product.name}
+                      className="object-contain cursor-pointer w-full h-full p-2"
+                      onClick={() => navigate(`/product/${item.product._id}`)}
+                    />
+                  </div>
+                  <div className="w-full">
+                    <div className="flex justify-between p-3">
+                      <div>
+                        <div className="font-bold">{item.product.name}</div>
+                        <div className="text-gray-400">
+                          {item.product.category.type}
                         </div>
-                        <div className="font-bold">
-                          <div className="text-end">
-                            &#8377; {item.product.price}
+                        <div className="flex font-bold mt-4">
+                          <div className="border border-black mr-2 rounded p-2 pr-5">
+                            Size: {item.size}
                           </div>
-                          <div className="text-gray-700">MRP incl. of all taxes</div>
+                          <div className="border border-black rounded p-2 pr-5">
+                            Qty: {item.quantity}
+                          </div>
                         </div>
                       </div>
-                      <div></div>
+                      <div className="font-bold">
+                        <div className="text-end">
+                          &#8377; {item.product.price}
+                        </div>
+                        <div className="text-gray-700">
+                          MRP incl. of all taxes
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex justify-end border p-2">
-                    <button className="border p-3 mr-2 border-black rounded-xl" onClick={()=>removeItemHandler(item._id)}>
-                      REMOVE
-                    </button>
-                    <button className="border p-3 border-black rounded-xl">
-                      MOVE TO WISHLIST
-                    </button>
-                  </div>
                 </div>
-              ))}
+                <div className="flex justify-end border p-2">
+                  <button
+                    className="border p-3 mr-2 border-black rounded-xl"
+                    onClick={() => {
+                      setRemoveOrWishlist("remove");
+                      setItemToRemove(item);
+                      setIsModalOpen(true);
+                    }}
+                  >
+                    REMOVE
+                  </button>
+                  <button
+                    className="border p-3 border-black rounded-xl"
+                    onClick={() => {
+                      setRemoveOrWishlist("wishlist");
+                      setItemToRemove(item);
+                      setIsModalOpen(true);
+                    }}
+                  >
+                    MOVE TO WISHLIST
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
           <div className="ml-4 w-1/5">
-            <div className=" w-full">
+            <div className="w-full">
               <div className="p-2">BILLING DETAILS</div>
               <div>
                 <div className="flex justify-between border p-3">
@@ -103,12 +137,17 @@ const Cart = () => {
                 </div>
               </div>
             </div>
-            <div className="hover:bg-green-700 cursor-pointer border mt-3 p-2 text-center font-bold text-white bg-green-800">PLACE ORDER</div>
+            <div className="hover:bg-green-700 cursor-pointer border mt-3 p-2 text-center font-bold text-white bg-green-800">
+              PLACE ORDER
+            </div>
           </div>
         </div>
       ) : (
         <div className="flex flex-col items-center space-y-4 border m-2 pt-2 pb-5">
-          <img src="https://tss-static-images.gumlet.io/emptyCart.png"></img>
+          <img
+            src="https://tss-static-images.gumlet.io/emptyCart.png"
+            alt="Empty Cart"
+          />
           <div className="font-bold text-xl">Your shopping cart is empty.</div>
           <div className="text-gray-500">
             Please add something soon, carts have feelings too.
@@ -131,6 +170,32 @@ const Cart = () => {
           </div>
         </div>
       )}
+
+      <YesOrNoModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setItemToRemove(null);
+        }}
+        onConfirm={() => {
+          removeOrWishlist === "remove"
+            ? removeItemHandler(itemToRemove._id)
+            : addToWishlistHandler(itemToRemove._id);
+          setIsModalOpen(false);
+          setItemToRemove(null);
+        }}
+        image={itemToRemove ? itemToRemove.product.images[0].url : ""}
+        text1={
+          removeOrWishlist === "remove"
+            ? "Remove Item From Cart"
+            : "Move Item To Wishlist"
+        }
+        text2={
+          removeOrWishlist === "remove"
+            ? "Are you sure you want to remove this product from your cart?"
+            : "Are you sure you want to remove the product from the cart and add to wishlist?"
+        }
+      />
     </div>
   );
 };

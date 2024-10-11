@@ -1,12 +1,11 @@
-import React, { useState} from 'react';
-
-import CategoryDropdowns from '../components/CatgeoryDropdowns';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { apiRequest } from '../utility/Api';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import LoaderModal from '../components/LoderModal';
+import CategoryDropdowns from '../components/CatgeoryDropdowns';
 
-const AddProduct = () => {
+const EditProduct = () => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
@@ -14,14 +13,45 @@ const AddProduct = () => {
     const [category, setCategory] = useState("");
     const [stock, setStock] = useState("");
     const [mainImage, setMainImage] = useState(null);
+    const [existingMainImage, setExistingMainImage] = useState(""); // Store the existing main image URL
     const [otherImages, setOtherImages] = useState([]);
+    const [existingOtherImages, setExistingOtherImages] = useState([]); // Store existing other images URLs
     const [isFeatured, setIsFeatured] = useState(false);
-    const [parentCategory,setParentCategory]=useState("");
-    const [subParentCategory,setSubParentCategory]=useState("");
+    const [parentCategory, setParentCategory] = useState("");
+    const [subParentCategory, setSubParentCategory] = useState("");
     const [status, setStatus] = useState('active');
     const [tags, setTags] = useState("");
-    const [loading,setLoading]=useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { id } = useParams();
+
+    // Fetch product data when component mounts
+    useEffect(() => {
+        const fetchProductData = async () => {
+            try {
+                const response = await apiRequest("GET", `/product/${id}`);
+                const product = response.data.product;
+
+                setName(product.name);
+                setDescription(product.description);
+                setPrice(product.price);
+                setBrand(product.brand);
+                setCategory(product.category);
+                setStock(product.stock);
+                setIsFeatured(product.isFeatured);
+                setParentCategory(product.P1category);
+                setSubParentCategory(product.P2category);
+                setStatus(product.status);
+                setTags(product.tags.join(', '));
+                setExistingMainImage(product.mainImage); 
+                setExistingOtherImages(product.otherImages);
+            } catch (error) {
+                toast.error(error.response.data.message);
+            }
+        };
+
+        fetchProductData();
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,15 +70,24 @@ const AddProduct = () => {
 
         if (mainImage) {
             formData.append('mainImage', mainImage);
+        } else if (existingMainImage) {
+            formData.append('mainImage', existingMainImage);
         }
-        otherImages.forEach(image => {
-            formData.append('otherImages', image);
-        });
+
+        if (otherImages.length > 0) {
+            otherImages.forEach(image => {
+                formData.append('otherImages', image);
+            });
+        } else {
+            existingOtherImages.forEach(image => {
+                formData.append('otherImages', image);
+            });
+        }
 
         try {
             setLoading(true);
-            const response = await apiRequest("POST",'/product', formData);
-            if(response.status==201){
+            const response = await apiRequest("PATCH", `/product/${id}`, formData);
+            if (response.status === 200) {
                 setTimeout(() => {
                     toast.success(response.data.message);
                     setLoading(false);
@@ -63,8 +102,8 @@ const AddProduct = () => {
 
     return (
         <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow-md">
-            <h1 className='text-2xl font-semibold text-center mb-4'>Add New Product</h1>
-            {loading && <div className="loader">Adding Product.....</div>}
+            <h1 className='text-2xl font-semibold text-center mb-4'>Edit Product</h1>
+            {loading && <div className="loader">Updating Product.....</div>}
             <form className='space-y-4' onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -98,7 +137,7 @@ const AddProduct = () => {
                     className='w-full p-2 border border-gray-300 rounded'
                 />
                 
-                <CategoryDropdowns setCategory={setCategory} setParentCategory={setParentCategory} setSubParentCategory={setSubParentCategory}/>
+                <CategoryDropdowns setCategory={setCategory} setParentCategory={setParentCategory} setSubParentCategory={setSubParentCategory} />
 
                 <input
                     type="number"
@@ -110,12 +149,11 @@ const AddProduct = () => {
                     className='w-full p-2 border border-gray-300 rounded'
                 />
                 <div>
-                    <label className="block mb-2">Main Image (required):</label>
+                    <label className="block mb-2">Main Image (optional):</label>
                     <input
                         type="file"
                         accept="image/*"
                         onChange={(e) => setMainImage(e.target.files[0])}
-                        required
                         className='w-full border border-gray-300 rounded'
                     />
                 </div>
@@ -129,6 +167,7 @@ const AddProduct = () => {
                         className='w-full border border-gray-300 rounded'
                     />
                 </div>
+
                 <label className="flex items-center">
                     <input
                         type="checkbox"
@@ -150,11 +189,11 @@ const AddProduct = () => {
                     onChange={(e) => setTags(e.target.value)}
                     className='w-full p-2 border border-gray-300 rounded'
                 />
-                <button type="submit" className='w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700'>Add Product</button>
+                <button type="submit" className='w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700'>Update Product</button>
             </form>
             <LoaderModal isOpen={loading} />
         </div>
     );
 };
 
-export default AddProduct;
+export default EditProduct;

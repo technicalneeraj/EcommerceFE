@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { apiRequest } from "../utility/Api";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -9,8 +9,10 @@ import { toast } from "react-toastify";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useNavigate } from "react-router-dom";
+import { authContext } from "../utility/AuthContext";
 
 const ProductData = () => {
+  const {userRole}=useContext(authContext)
   const { id } = useParams();
   const navigate=useNavigate();
   const [data, setData] = useState({});
@@ -64,6 +66,11 @@ const ProductData = () => {
     toast.success(response.data.message);
   };
 
+  const productDelete=async()=>{
+    const response=await apiRequest("DELETE",`/product/${id}`);
+    toast.success(response.data.message);
+    navigate("/");
+  }
   const sizeClickHandler = (size) => {
     setSelectedSize(size);
     setIsSizeSelected(true);
@@ -88,6 +95,13 @@ const ProductData = () => {
           <div className="text-3xl font-extrabold">{data.name}</div>
           <div className="text-gray-400 pb-3">{category}</div>
         </div>
+        {
+          userRole==='admin' && 
+          <div className="font-bold text-white">
+            <button className="border p-2 bg-red-500 mr-2" onClick={()=>navigate(`/edit-product/${id}`)}>EDIT</button>
+            <button className="border p-2 bg-red-500" onClick={productDelete}>DELETE</button>
+          </div>
+        }
         <hr />
         <div>
           <div className="font-extrabold text-2xl">

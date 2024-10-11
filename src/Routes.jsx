@@ -17,6 +17,7 @@ import CatgeoryAdd from './pages/CatgeoryAdd.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Wishlist from './pages/Wishlist.jsx';
 import Cart from './pages/Cart.jsx';
+import EditProduct from './pages/EditProduct.jsx';
 // import ProtectedRoute from './ProtectedRoute.js';
 
 function Routes() {
@@ -33,6 +34,7 @@ function Routes() {
           <Route path='/otpverification' element={<OtpPage />} />
           <Route path='/login' element={<Login />} />
         </Route>
+        <Route path='/edit-product/:id' element={<EditProduct/>}/>
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/mywishlist' element={<Wishlist/>}/>
         <Route path='/profile' element={isLog ? <Profile /> : <Navigate to="/login" state={{ from: '/profile' }} />} />

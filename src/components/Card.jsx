@@ -8,6 +8,7 @@ import { apiRequest } from '../utility/Api';
 const Card = ({ imageUrl,ID ,isFavoriteInDb}) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const navigate=useNavigate();
+  
   const handleHeartClicked = async(ID) => {
     setIsFavorited(!isFavorited);
     try{
