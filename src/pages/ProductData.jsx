@@ -10,6 +10,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useNavigate } from "react-router-dom";
 import { authContext } from "../utility/AuthContext";
+import YesOrNoModal from "../components/YesOrNoModal";
 
 const ProductData = () => {
   const {userRole}=useContext(authContext)
@@ -25,6 +26,7 @@ const ProductData = () => {
   const [descriptionClick, setDescriptionClick] = useState(false);
   const [isSizeSelected, setIsSizeSelected] = useState(true);
   const [isAlreadyInCart, setIsAlreadyInCart] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchdata = async () => {
@@ -99,7 +101,7 @@ const ProductData = () => {
           userRole==='admin' && 
           <div className="font-bold text-white">
             <button className="border p-2 bg-red-500 mr-2" onClick={()=>navigate(`/edit-product/${id}`)}>EDIT</button>
-            <button className="border p-2 bg-red-500" onClick={productDelete}>DELETE</button>
+            <button className="border p-2 bg-red-500" onClick={() => setIsModalOpen(true)}>DELETE</button>
           </div>
         }
         <hr />
@@ -184,6 +186,17 @@ const ProductData = () => {
           </div>
         </div>
       </div>
+      <YesOrNoModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={() => {
+                    productDelete();
+                    setIsModalOpen(false); 
+                }}
+                image={data.images[0].url}
+                text1={data.name}
+                text2={"Are u sure you want to delete this product"}
+            />
     </div>
   );
 };

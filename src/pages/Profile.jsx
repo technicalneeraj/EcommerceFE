@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useContext } from 'react';
 import { authContext } from '../utility/AuthContext';
 import ConfirmationModal from '../components/ConfirmationModal';
+import LogOutModal from '../components/LogOutModal';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Profile = () => {
     const [phone, setPhone] = useState(userData.phone);
     const [address, setAddress] = useState(userData.address.length > 0 ? userData.address[0] : null)
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLogModalOpen, setIsLogModalOpen] = useState(false);
     const savehandler = async (e) => {
         e.preventDefault();
         const data = {
@@ -67,7 +69,7 @@ const Profile = () => {
                         <div>{userData.email}</div>
                     </div>
                     <button  onClick={() => setIsModalOpen(true)} className='border border-red-600 text-rose-700 p-3 hover:bg-red-600 hover:text-white'>DELETE MY ACCOUNT</button>
-                    <button onClick={logOutHandler} className='border border-red-600 text-rose-700 p-3 hover:bg-red-600 hover:text-white'>LOGOUT</button>
+                    <button onClick={() => setIsLogModalOpen(true)} className='border border-red-600 text-rose-700 p-3 hover:bg-red-600 hover:text-white'>LOGOUT</button>
                 </div>
                 <div className='flex flex-col mb-3'>
                     <div>
@@ -114,6 +116,17 @@ const Profile = () => {
                     deleteAccountHandler();
                     setIsModalOpen(false); // Close the modal after confirming
                 }}
+            />
+             <LogOutModal
+                isOpen={isLogModalOpen}
+                onClose={() => setIsLogModalOpen(false)}
+                onConfirm={() => {
+                    logOutHandler();
+                    setIsLogModalOpen(false); 
+                }}
+                image={"https://www.thesouledstore.com/static/img/goodbye-image.c8453b4.jpg"}
+                text1={"Confirm Logout"}
+                text2={"Are you sure you want to logout?"}
             />
         </>
     )

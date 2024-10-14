@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../utility/Api';
+import { toast } from 'react-toastify';
 
 const CategoryDropdowns = ({ setCategory ,setParentCategory,setSubParentCategory}) => {
     const [categories, setCategories] = useState([]);
@@ -13,21 +14,6 @@ const CategoryDropdowns = ({ setCategory ,setParentCategory,setSubParentCategory
         { id: 'kids', name: 'kids' }
     ];
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await apiRequest("GET", '/api/categories');
-                if (Array.isArray(response.data)) {
-                    setCategories(response.data);
-                } else {
-                    console.error('Expected an array of categories, got:', response.data);
-                }
-            } catch (error) {
-                console.error('Error fetching categories:', error);
-            }
-        };
-        fetchCategories();
-    }, []);
 
     const handleSuperParentChange = (e) => {
         const selected = e.target.value;
@@ -39,6 +25,20 @@ const CategoryDropdowns = ({ setCategory ,setParentCategory,setSubParentCategory
     const handleSubCategoryChange = (e) => {
         const selected = e.target.value;
         setSelectedSubCategory(selected);
+        const fetchCategories = async () => {
+            try {
+                const response = await apiRequest("GET", `/api/categories/?p1category=${selectedSuperParent}&p2category=${e.target.value}`);
+                if (Array.isArray(response.data)) {
+                    setCategories(response.data);
+                } else {
+                    console.error('Expected an array of categories, got:', response.data);
+                }
+            } catch (error) {
+                console.log(error);
+                toast.error('Error fetching categories');
+            }
+        };
+        fetchCategories();
         setSelectedChild('');
     };
 

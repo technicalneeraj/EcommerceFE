@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { apiRequest } from '../utility/Api';
+import { useRef } from 'react';
 
 const CategoryAdd = () => {
   const [categoryName, setCategoryName] = useState('');
   const [parentCategories, setParentCategories] = useState('');
   const [image, setImage] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +29,9 @@ const CategoryAdd = () => {
       setCategoryName('');
       setParentCategories('');
       setImage(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     } catch (error) {
       toast.error('Error adding category');
     }

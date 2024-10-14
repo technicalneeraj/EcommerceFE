@@ -18,6 +18,7 @@ import NotFound from './pages/NotFound.jsx';
 import Wishlist from './pages/Wishlist.jsx';
 import Cart from './pages/Cart.jsx';
 import EditProduct from './pages/EditProduct.jsx';
+import BannerUpload from './pages/BannerUpload.jsx';
 // import ProtectedRoute from './ProtectedRoute.js';
 
 function Routes() {
@@ -28,7 +29,10 @@ function Routes() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<Layout />}>
-        <Route index element={<Home />} />
+        <Route index element={<Navigate to="/men" />} /> 
+        <Route path='/men' element={<Home />} />
+        <Route path='/women' element={<Home />} />
+        <Route path='/kids' element={<Home />} />
         <Route path="/" element={<HomeSign />}>
           <Route path='/register' element={<Signup />} />
           <Route path='/otpverification' element={<OtpPage />} />
@@ -40,8 +44,9 @@ function Routes() {
         <Route path='/profile' element={isLog ? <Profile /> : <Navigate to="/login" state={{ from: '/profile' }} />} />
         <Route path='/product/:id' element={<ProductData />} />
         <Route path='/userdata' element={<UserData />} />
-        <Route path='/categoryadd' element={<CatgeoryAdd/>}/>
+        <Route path='/add-category' element={<CatgeoryAdd/>}/>
         <Route path='/login/forgotpassword' element={<Forgotpassword />} />
+        <Route path='/add-banner' element={<BannerUpload/>}/>
         {/* <Route element={<ProtectedRoute />}> */}
           <Route path='/add-product' element={isLog? <AddProduct />:<Navigate to="/login" state={{ from: '/add-product' }}/> } />
         {/* </Route> */}
