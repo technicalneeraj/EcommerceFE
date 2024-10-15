@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import LogOutModal from './LogOutModal';
 const Logout = () => {
     const navigate=useNavigate();
-    const { setIsLog ,setUserRole} =  useContext(authContext);
+    const { setIsLog ,setUserRole,setUserData} =  useContext(authContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleLogout = async () => {
@@ -17,6 +17,7 @@ const Logout = () => {
                 toast.success("You Successfully LogOut");
                 setIsLog(false);
                 setUserRole("");
+                setUserData(null);
                 navigate("/");
                 // window.location.href = '/';
             }

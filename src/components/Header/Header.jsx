@@ -10,6 +10,7 @@ import { useContext } from "react";
 import Logout from "../Logout";
 import { authContext } from "../../utility/AuthContext";
 import { useCategory } from "../../utility/CategoryContext";
+import { apiRequest } from "../../utility/Api";
 
 const Header = () => {
   const { setCurrentCategory, currentCategory } = useCategory();
@@ -18,11 +19,36 @@ const Header = () => {
   const [isDownOpen, setIsDownOpen] = useState(false);
   const [profileOpen, setIsProfileOpen] = useState(false);
   const [adminTools, setAdminTools] = useState(false);
+  const [topCategory, setTopCategory] = useState([]);
+  const [downCategory, setDownCategory] = useState([]);
   const navigate = useNavigate();
 
   const handleCategoryClick = (category) => {
     setCurrentCategory(category);
     navigate(`/${category}`);
+  };
+
+  useEffect(() => {
+    fetchTopwear();
+    fetchDownwear();
+  }, [currentCategory]);
+
+  const fetchTopwear = async () => {
+    const response = await apiRequest(
+      "GET",
+      `/api/categories?p1category=${currentCategory}&p2category=upper`
+    );
+    const responseArray = response.data.map((single) => single.type);
+    setTopCategory(responseArray);
+  };
+
+  const fetchDownwear = async () => {
+    const response = await apiRequest(
+      "GET",
+      `/api/categories?p1category=${currentCategory}&p2category=lower`
+    );
+    const responseArray = response.data.map((single) => single.type);
+    setDownCategory(responseArray);
   };
 
   return (
@@ -71,18 +97,18 @@ const Header = () => {
                 onMouseEnter={() => setIsTopOpen(true)}
                 onMouseLeave={() => setIsTopOpen(false)}
               >
-                <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
-                  Shirts
-                </div>
-                <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
-                  Tshirts
-                </div>
-                <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
-                  Tops
-                </div>
-                <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
-                  Jackets
-                </div>
+                {topCategory.map((value) => {
+                  return (
+                    <div
+                      onClick={() => navigate(`/${currentCategory}/${value}`)}
+                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                      key={value}
+                    >
+                      {value.charAt(0).toUpperCase() +
+                        value.slice(1).toLowerCase()}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -104,18 +130,18 @@ const Header = () => {
                 onMouseEnter={() => setIsDownOpen(true)}
                 onMouseLeave={() => setIsDownOpen(false)}
               >
-                <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
-                  Jeans
-                </div>
-                <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
-                  Shorts
-                </div>
-                <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
-                  Trousers
-                </div>
-                <div className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
-                  Skirts
-                </div>
+                {downCategory.map((value) => {
+                  return (
+                    <div
+                      onClick={() => navigate(`/${currentCategory}/${value}`)}
+                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                      key={value}
+                    >
+                      {value.charAt(0).toUpperCase() +
+                        value.slice(1).toLowerCase()}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -137,13 +163,22 @@ const Header = () => {
                   onMouseEnter={() => setAdminTools(true)}
                   onMouseLeave={() => setAdminTools(false)}
                 >
-                  <div onClick={()=>navigate("/add-product")} className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+                  <div
+                    onClick={() => navigate("/add-product")}
+                    className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                  >
                     Add Product
                   </div>
-                  <div onClick={()=>navigate("/add-category")} className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+                  <div
+                    onClick={() => navigate("/add-category")}
+                    className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                  >
                     Add Category
                   </div>
-                  <div onClick={()=>navigate("/add-banner")} className="px-2 py-1 hover:bg-gray-100 cursor-pointer">
+                  <div
+                    onClick={() => navigate("/add-banner")}
+                    className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                  >
                     Add Banner
                   </div>
                 </div>

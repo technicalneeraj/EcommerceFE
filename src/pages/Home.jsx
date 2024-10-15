@@ -40,7 +40,7 @@ const Home = () => {
       <h1 className="text-2xl font-extrabold py-5 text-center">Categories</h1>
       <div className="flex flex-wrap justify-center">
         {data.map((single, index) => (
-          <CategoryCard imageUrl={single.image} key={index} /> // Using index as key
+          <CategoryCard imageUrl={single.image} key={index} Pcategory={currentCategory} category={single.type}/> // Using index as key
         ))}
       </div>
       <h1 className="text-2xl font-extrabold py-5 text-center">New Arrivals</h1>

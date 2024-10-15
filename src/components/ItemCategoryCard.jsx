@@ -1,0 +1,54 @@
+import React,{useState} from "react";
+import { useNavigate } from "react-router-dom";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { apiRequest } from "../utility/Api";
+import { toast } from 'react-toastify';
+
+const ItemCategoryCard = ({ product }) => {
+  const [isFavorited, setIsFavorited] = useState(false);
+  const navigate = useNavigate();
+
+  const handleHeartClicked = async (ID) => {
+    setIsFavorited(!isFavorited);
+    try {
+      const response = await apiRequest(
+        "PATCH",
+        `/user/updating-user-wishlist/${ID}`
+      );
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  return (
+    <>
+      <div className="relative cursor-pointer flex flex-col  bg-white  overflow-hidden mx-3 h-[30rem] w-[18rem]  mb-5 mt-4">
+        <div className="h-[25rem] w-[18rem]">
+          <img
+            onClick={() => navigate(`/product/${product._id}`)}
+            className="w-full h-full object-cover object-top"
+            src={product.images[0].url}
+          />
+        </div>
+        <div className="mb-4 mt-2">
+          <div className="bold">{product.name}</div>
+          <hr />
+          <div className="font-bold">
+            &#8377;
+            {product.price}
+          </div>
+        </div>
+        <button
+          onClick={() => handleHeartClicked(product._id)}
+          className="absolute top-2 rounded-full p-1 right-2 text-red-500 bg-white  cursor-pointer border-none"
+        >
+          {isFavorited ?<FavoriteIcon/>:<FavoriteBorderIcon/>}
+        </button>
+      </div>
+    </>
+  );
+};
+
+export default ItemCategoryCard;

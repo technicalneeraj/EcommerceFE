@@ -22,7 +22,7 @@ const HomeSign = () => {
     return (
         <div className='flex justify-center mr-24 ml-24 outest bg-slate-200'>
             <div className='mr-24 ml-24 mt-4 mb-4 bg-white'>
-                <div className='mb-4 mt-4 text-center'><b>The Souled Store</b></div>
+                <div className='mb-4 mt-4 text-center'><b>Shoper</b></div>
                 <div className='text-center buttons'>
                   <button 
                       className={`px-16 border p-2 border-green-500 ${loginpage ? 'bg-green-800 text-white' : 'bg-white text-black'}`} 

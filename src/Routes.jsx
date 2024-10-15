@@ -19,6 +19,7 @@ import Wishlist from './pages/Wishlist.jsx';
 import Cart from './pages/Cart.jsx';
 import EditProduct from './pages/EditProduct.jsx';
 import BannerUpload from './pages/BannerUpload.jsx';
+import CategoryPage from './pages/CategoryPage.jsx';
 // import ProtectedRoute from './ProtectedRoute.js';
 
 function Routes() {
@@ -47,6 +48,7 @@ function Routes() {
         <Route path='/add-category' element={<CatgeoryAdd/>}/>
         <Route path='/login/forgotpassword' element={<Forgotpassword />} />
         <Route path='/add-banner' element={<BannerUpload/>}/>
+        <Route path="/:Pcategory/:category" element={<CategoryPage/>} />
         {/* <Route element={<ProtectedRoute />}> */}
           <Route path='/add-product' element={isLog? <AddProduct />:<Navigate to="/login" state={{ from: '/add-product' }}/> } />
         {/* </Route> */}

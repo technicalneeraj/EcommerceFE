@@ -9,7 +9,7 @@ import LogOutModal from '../components/LogOutModal';
 
 const Profile = () => {
     const navigate = useNavigate();
-    const { userData, setIsLog } = useContext(authContext);
+    const { userData, setIsLog ,setUserData,setUserRole} = useContext(authContext);
     const [firstname, setfirstname] = useState(userData.firstname);
     const [lastname, setlastname] = useState(userData.lastname);
     const [phone, setPhone] = useState(userData.phone);
@@ -40,6 +40,8 @@ const Profile = () => {
         try {
             await apiRequest("POST", "/um/logout");
             setIsLog(false);
+            setUserRole("");
+            setUserData(null);
             toast.success("You logged out");
             navigate("/");
         }
