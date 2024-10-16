@@ -1,16 +1,16 @@
 import React from "react";
 
-const LoaderModal = ({ isOpen }) => {
+const LoaderModal = ({ isOpen ,text}) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-5 rounded-lg shadow-lg flex flex-col items-center">
         <div className="loader"></div>
-        <p className="mt-3 font-bold">Adding product, please wait...</p>
+        <p className="mt-3 font-bold">{text}</p>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .loader {
           border: 8px solid #f3f3f3;
           border-top: 8px solid #3498db;

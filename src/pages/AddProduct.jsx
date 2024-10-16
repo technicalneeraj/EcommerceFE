@@ -76,7 +76,7 @@ const AddProduct = () => {
           toast.success(response.data.message);
           setLoading(false);
           navigate("/");
-        }, 3000);
+        }, 2000);
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -232,7 +232,7 @@ const AddProduct = () => {
           Add Product
         </button>
       </form>
-      <LoaderModal isOpen={loading} />
+      <LoaderModal isOpen={loading} text={"Adding product, please wait..."} />
     </div>
   );
 };

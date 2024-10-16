@@ -21,6 +21,8 @@ const Header = () => {
   const [adminTools, setAdminTools] = useState(false);
   const [topCategory, setTopCategory] = useState([]);
   const [downCategory, setDownCategory] = useState([]);
+  const [searchHovered, setSearchHovered] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
 
   const handleCategoryClick = (category) => {
@@ -51,6 +53,13 @@ const Header = () => {
     setDownCategory(responseArray);
   };
 
+  const searchHandler=()=>{
+    if(searchValue==="" || searchValue.trim()===""){
+      return;
+    }
+    navigate(`/search?q=${searchValue}`);
+  }
+
   return (
     <>
       <div className="w-full h-12 bg-red-600">
@@ -75,7 +84,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <div className=" w-full justify-between flex p-6 items-center bg-white relative ">
+      <div className=" w-full justify-between flex p-6 items-center bg-white sticky top-0 z-50">
         <div className="flex space-x-7 ml-4 h-full items-center">
           <div onClick={() => navigate("/")} className="cursor-pointer">
             Shoper
@@ -188,8 +197,28 @@ const Header = () => {
         </div>
 
         <div className="flex items-center space-x-4 pr-4">
-          <div className="cursor-pointer">
-            <SearchIcon />
+          <div
+            className={`flex p-2 ${searchHovered ? "bg-gray-200" : ""}`}
+            onMouseLeave={() => setSearchHovered(false)}
+          >
+            {searchHovered && (
+              <div>
+                <input
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  type="text"
+                  placeholder="What are you looking for?"
+                  className="bg-gray-200 focus:outline-none"
+                />
+              </div>
+            )}
+            <div
+              className="cursor-pointer"
+              onMouseEnter={() => setSearchHovered(true)}
+              onClick={searchHandler}
+            >
+              <SearchIcon />
+            </div>
           </div>
           <div
             className="cursor-pointer hover:text-red-600 relative"

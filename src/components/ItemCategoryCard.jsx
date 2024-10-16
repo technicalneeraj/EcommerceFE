@@ -4,12 +4,20 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { apiRequest } from "../utility/Api";
 import { toast } from 'react-toastify';
+import { useContext } from "react";
+import { authContext } from "../utility/AuthContext";
 
 const ItemCategoryCard = ({ product }) => {
+  const { isLog } = useContext(authContext);
   const [isFavorited, setIsFavorited] = useState(false);
   const navigate = useNavigate();
 
   const handleHeartClicked = async (ID) => {
+    if(!isLog){
+      toast.error("Please Login First");
+      navigate("/login");
+      return;
+    }
     setIsFavorited(!isFavorited);
     try {
       const response = await apiRequest(

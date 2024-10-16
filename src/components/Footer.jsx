@@ -38,7 +38,7 @@ const Footer = () => {
             <div>View More</div>
           </div>
       </div>
-      <div className='w-full bg-white text-black text-center py-3'>&copy;The Souled Store 2024-25</div>
+      <div className='w-full bg-white text-black text-center py-3'>&copy;Shoper 2024-25</div>
     </>
 
   )

@@ -10,12 +10,14 @@ const Wishlist = () => {
   const [itemsCount, setItemsCount] = useState(0);
   const [wishListItems, setWishListItems] = useState([]);
   useEffect(() => {
-    const productFetching = async () => {
-      const response = await apiRequest("GET", "/user/wishlist-product");
-      setItemsCount(response.data.data.length);
-      setWishListItems(response.data.data);
-    };
-    productFetching();
+    if (isLog) {
+      const productFetching = async () => {
+        const response = await apiRequest("GET", "/user/wishlist-product");
+        setItemsCount(response.data.data.length);
+        setWishListItems(response.data.data);
+      };
+      productFetching();
+    }
   }, [wishListItems]);
   return (
     <div>
@@ -57,7 +59,13 @@ const Wishlist = () => {
           </div>
           <div className="flex flex-wrap">
             {wishListItems.length > 0 &&
-              wishListItems.map((item) => <WishlistCard item={item} key={item._id} setWishListItems={setWishListItems}/>)}
+              wishListItems.map((item) => (
+                <WishlistCard
+                  item={item}
+                  key={item._id}
+                  setWishListItems={setWishListItems}
+                />
+              ))}
           </div>
           <div className="mb-9"></div>
         </div>

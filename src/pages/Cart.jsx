@@ -15,12 +15,14 @@ const Cart = () => {
   const [removeOrWishlist, setRemoveOrWishlist] = useState(null);
 
   useEffect(() => {
+    if(isLog){
     const fetchingCart = async () => {
       const response = await apiRequest("GET", "/user/cart");
       setCart(response.data.cart);
       setItems(response.data.cart.cartItems);
     };
     fetchingCart();
+  }
   }, [cart]);
 
   const removeItemHandler = async (id) => {

@@ -3,6 +3,7 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 import OtpPage from './pages/OtpPage.jsx';
 import Home from './pages/Home.jsx';
 import Layout from './Layout.jsx';
+import SearchPage from './pages/SearchPage.jsx';
 import Login from './pages/Login.jsx';
 import HomeSign from './pages/HomeSign.jsx';
 import Forgotpassword from "./pages/ForgotPassword.jsx";
@@ -24,8 +25,6 @@ import CategoryPage from './pages/CategoryPage.jsx';
 
 function Routes() {
   const { isLog } = useContext(authContext);
-  console.log(isLog);
-  
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -49,6 +48,7 @@ function Routes() {
         <Route path='/login/forgotpassword' element={<Forgotpassword />} />
         <Route path='/add-banner' element={<BannerUpload/>}/>
         <Route path="/:Pcategory/:category" element={<CategoryPage/>} />
+        <Route path='/search' element={<SearchPage/>}/>
         {/* <Route element={<ProtectedRoute />}> */}
           <Route path='/add-product' element={isLog? <AddProduct />:<Navigate to="/login" state={{ from: '/add-product' }}/> } />
         {/* </Route> */}

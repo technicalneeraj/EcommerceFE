@@ -4,13 +4,22 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { apiRequest } from '../utility/Api';
+import { useContext } from 'react';
+import { authContext } from '../utility/AuthContext';
 
 const Card = ({ imageUrl,ID ,isFavoriteInDb}) => {
+  const { userData } = useContext(authContext);
   const [isFavorited, setIsFavorited] = useState(false);
   const navigate=useNavigate();
   
   const handleHeartClicked = async(ID) => {
+    if(!userData){
+      toast.error("Please Login First");
+      navigate("/login");
+      return;
+    }
     setIsFavorited(!isFavorited);
+   
     try{
     const response=await apiRequest("PATCH",`/user/updating-user-wishlist/${ID}`);
     toast.success(response.data.message);

@@ -29,7 +29,7 @@ const CategoryPage = () => {
   return (
     <div className="flex mx-auto flex-col">
       <div className="flex justify-center">
-        <img src={bannerImage} alt="banner" />
+        <img src={bannerImage} />
       </div>
       <div className="flex container mx-auto justify-center">
         <div className="bg-red-400">         
