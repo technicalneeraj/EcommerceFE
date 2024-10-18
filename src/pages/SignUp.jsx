@@ -51,7 +51,7 @@ const Signup = () => {
                toast.error("User with entered email already exists.");
             }
         } catch (error) {
-           toast.error("An error occurred. Please try again.");
+           toast.error(error.response.data.message);
         }
     };
 

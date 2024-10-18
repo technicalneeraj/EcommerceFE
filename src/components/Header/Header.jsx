@@ -11,6 +11,7 @@ import Logout from "../Logout";
 import { authContext } from "../../utility/AuthContext";
 import { useCategory } from "../../utility/CategoryContext";
 import { apiRequest } from "../../utility/Api";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const Header = () => {
   const { setCurrentCategory, currentCategory } = useCategory();
@@ -23,6 +24,7 @@ const Header = () => {
   const [downCategory, setDownCategory] = useState([]);
   const [searchHovered, setSearchHovered] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleCategoryClick = (category) => {
@@ -53,17 +55,17 @@ const Header = () => {
     setDownCategory(responseArray);
   };
 
-  const searchHandler=()=>{
-    if(searchValue==="" || searchValue.trim()===""){
+  const searchHandler = () => {
+    if (searchValue === "" || searchValue.trim() === "") {
       return;
     }
     navigate(`/search?q=${searchValue}`);
-  }
+  };
 
   return (
     <>
       <div className="w-full h-12 bg-red-600">
-        <div className="flex text-white justify-center w-1/2">
+        <div className="flex text-white justify-center md:w-1/2 w-full">
           <div
             onClick={() => handleCategoryClick("women")}
             className={`border border-black h-12 px-5 pt-2 cursor-pointer text-center font-bold ${currentCategory === "women" ? "bg-white text-black" : ""}`}
@@ -89,44 +91,45 @@ const Header = () => {
           <div onClick={() => navigate("/")} className="cursor-pointer">
             Shoper
           </div>
-          <div>
-            <div
-              className="cursor-pointer hover:text-red-600 h-full hide-on-small"
-              onMouseEnter={() => setIsTopOpen(true)}
-              onMouseLeave={() => setIsTopOpen(false)}
-            >
+          <div
+            className="p-1 flex flex-col hide-on-small"
+            onMouseEnter={() => setIsTopOpen(true)}
+            onMouseLeave={() => setIsTopOpen(false)}
+          >
+            <div className="cursor-pointer hover:text-red-600 h-full hide-on-small">
               Topwear{" "}
               <span>
                 <KeyboardArrowDownIcon />
               </span>
             </div>
-            {isTopOpen && (
-              <div
-                className="absolute z-50 bg-white border border-gray-300 shadow-md mt-1"
-                onMouseEnter={() => setIsTopOpen(true)}
-                onMouseLeave={() => setIsTopOpen(false)}
-              >
-                {topCategory.map((value) => {
-                  return (
-                    <div
-                      onClick={() => navigate(`/${currentCategory}/${value}`)}
-                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
-                      key={value}
-                    >
-                      {value.charAt(0).toUpperCase() +
-                        value.slice(1).toLowerCase()}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            <div>
+              {isTopOpen && (
+                <div
+                  className="absolute z-50 bg-white border border-gray-300 shadow-md mt-1 w-24 text-center"
+                  onMouseEnter={() => setIsTopOpen(true)}
+                  onMouseLeave={() => setIsTopOpen(false)}
+                >
+                  {topCategory.map((value) => {
+                    return (
+                      <div
+                        onClick={() => navigate(`/${currentCategory}/${value}`)}
+                        className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                        key={value}
+                      >
+                        {value.charAt(0).toUpperCase() +
+                          value.slice(1).toLowerCase()}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div>
+          <div className="p-1">
             <div
               className="cursor-pointer hover:text-red-600 hide-on-small"
               onMouseEnter={() => setIsDownOpen(true)}
-              onMouseLeave={() => setIsDownOpen(false)}
             >
               Downwear{" "}
               <span>
@@ -155,7 +158,7 @@ const Header = () => {
             )}
           </div>
           {isLog && userRole == "admin" && (
-            <div>
+            <div className="p-1">
               <div
                 className="cursor-pointer hover:text-red-600 hide-on-small"
                 onMouseEnter={() => setAdminTools(true)}
@@ -202,7 +205,7 @@ const Header = () => {
             onMouseLeave={() => setSearchHovered(false)}
           >
             {searchHovered && (
-              <div>
+              <div className="hide-on-small">
                 <input
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
@@ -213,7 +216,7 @@ const Header = () => {
               </div>
             )}
             <div
-              className="cursor-pointer"
+              className="cursor-pointer hide-on-small"
               onMouseEnter={() => setSearchHovered(true)}
               onClick={searchHandler}
             >
@@ -265,6 +268,22 @@ const Header = () => {
           </div>
           <div className="cursor-pointer" onClick={() => navigate("/cart")}>
             <LocalMallIcon />
+          </div>
+          <div className="md:hidden" onMouseEnter={() => setIsMoreOpen(true)}>
+            <div className="relative">
+              <MoreVertIcon />
+              {isMoreOpen && (
+                <div
+                  className="bg-white z-50 cursor-pointer absolute -left-12 w-28 top-12 text-center flex items-center space-y-2 justify-center flex-col"
+                  onMouseLeave={() => setIsMoreOpen(false)}
+                  onMouseEnter={() => setIsMoreOpen(true)}
+                >
+                  {userRole === "admin" && <div className="hover:text-red-600" onClick={()=>navigate("/add-product")}>Add Product</div>}
+                  {userRole === "admin" && <div className="hover:text-red-600" onClick={()=>navigate("/add-banner")}>Add Banner</div>}
+                  {userRole === "admin" && <div className="hover:text-red-600" onClick={()=>navigate("/add-category")}>Add Category</div>}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

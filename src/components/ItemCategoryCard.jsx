@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { useContext } from "react";
 import { authContext } from "../utility/AuthContext";
 
-const ItemCategoryCard = ({ product }) => {
+const ItemCategoryCard = ({ product,isFavoriteInDb }) => {
   const { isLog } = useContext(authContext);
   const [isFavorited, setIsFavorited] = useState(false);
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ const ItemCategoryCard = ({ product }) => {
           onClick={() => handleHeartClicked(product._id)}
           className="absolute top-2 rounded-full p-1 right-2 text-red-500 bg-white  cursor-pointer border-none"
         >
-          {isFavorited ?<FavoriteIcon/>:<FavoriteBorderIcon/>}
+          {isFavoriteInDb || isFavorited ?<FavoriteIcon/>:<FavoriteBorderIcon/>}
         </button>
       </div>
     </>

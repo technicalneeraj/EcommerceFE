@@ -3,17 +3,40 @@ import { useLocation } from "react-router-dom";
 import { apiRequest } from "../utility/Api";
 import ItemCategoryCard from "../components/ItemCategoryCard";
 import { useCategory } from "../utility/CategoryContext";
+import { useContext } from "react";
+import { authContext } from "../utility/AuthContext";
 
 const SearchPage = () => {
   const location = useLocation();
+  const { userData } = useContext(authContext);
   const queryParams = new URLSearchParams(location.search);
   const q = queryParams.get("q");
   const [products, setProducts] = useState([]);
   const { currentCategory } = useCategory();
   const [similarProducts, setSimilarProducts] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
   useEffect(() => {
     fetchProducts();
   }, [q]);
+
+  useEffect(() => {
+    if (userData) {
+      const fetchWishlist = async () => {
+        try {
+          const { status, data } = await apiRequest(
+            "GET",
+            "/user/send-wishlist"
+          );
+          if (status === 200) {
+            setWishlist(data.wishlistData);
+          }
+        } catch (error) {
+          console.error("Error fetching wishlist:", error);
+        }
+      };
+      fetchWishlist();
+    }
+  }, []);
 
   const fetchProducts = async () => {
     const res = await apiRequest("GET", `/product/search?search=${q}`);
@@ -45,16 +68,33 @@ const SearchPage = () => {
               Here are the closely relevant search results
             </div>
             <div className="flex flex-wrap">
-              {similarProducts.map((product) => (
-                <ItemCategoryCard key={product._id} product={product} />
-              ))}
+              {similarProducts.map((product) => {
+                const isFavorited = wishlist.some(
+                  (item) => item === product._id
+                );
+
+                return (
+                  <ItemCategoryCard
+                    key={product._id}
+                    product={product}
+                    isFavoriteInDb={isFavorited}
+                  />
+                );
+              })}
             </div>
           </div>
         ) : (
           <div className="flex flex-wrap">
-            {products.map((product) => (
-              <ItemCategoryCard key={product._id} product={product} />
-            ))}
+            {products.map((product) => {
+              const isFavorited = wishlist.some((item) => item === product._id);
+              return (
+                <ItemCategoryCard
+                  key={product._id}
+                  product={product}
+                  isFavoriteInDb={isFavorited}
+                />
+              );
+            })}
           </div>
         )}
       </div>

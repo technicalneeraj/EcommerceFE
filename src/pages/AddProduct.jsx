@@ -11,7 +11,7 @@ const AddProduct = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("");
-  const [sku,setSku]=useState("");
+  const [sku, setSku] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState("");
   const [mainImage, setMainImage] = useState(null);
@@ -25,12 +25,11 @@ const AddProduct = () => {
   const [attributes, setAttributes] = useState([{ name: "", value: "" }]);
   const navigate = useNavigate();
 
-
   const handleAttributeChange = (index, field, value) => {
-    const newAttributes = [...attributes];  //copy maded so change being deteced and re-renders
+    const newAttributes = [...attributes]; //copy maded so change being deteced and re-renders
     newAttributes[index][field] = value;
     setAttributes(newAttributes);
-};
+  };
 
   const addAttribute = () => {
     setAttributes([...attributes, { name: "", value: "" }]);
@@ -49,7 +48,7 @@ const AddProduct = () => {
     formData.append("stock", stock);
     formData.append("isFeatured", isFeatured);
     formData.append("status", status);
-    formData.append("sku",sku);
+    formData.append("sku", sku);
     formData.append(
       "tags",
       tags
@@ -64,8 +63,8 @@ const AddProduct = () => {
     otherImages.forEach((image) => {
       formData.append("otherImages", image);
     });
-    attributes.forEach(attr => {
-        formData.append('attributes', JSON.stringify(attr));
+    attributes.forEach((attr) => {
+      formData.append("attributes", JSON.stringify(attr));
     });
 
     try {
@@ -85,7 +84,7 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow-md">
+    <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow-2xl mb-5 mt-5 shadow-red-800">
       <h1 className="text-2xl font-semibold text-center mb-4">
         Add New Product
       </h1>
@@ -106,45 +105,48 @@ const AddProduct = () => {
           required
           className="w-full p-2 border border-gray-300 rounded h-24"
         />
-        <input
-          type="number"
-          placeholder="Price of product*"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          required
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-        <input
-          type="text"
-          placeholder="Brand of product*"
-          value={brand}
-          onChange={(e) => setBrand(e.target.value)}
-          required
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-         <input
-          type="text"
-          placeholder="Sku*"
-          value={sku}
-          onChange={(e) => setSku(e.target.value)}
-          required
-          className="w-full p-2 border border-gray-300 rounded"
-        />
+        <div className="flex">
+          <input
+            type="number"
+            placeholder="Price of product*"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+            className="w-full p-2  mr-2 border border-gray-300 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Brand of product*"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            required
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="flex">
+          <input
+            type="text"
+            placeholder="Sku*"
+            value={sku}
+            onChange={(e) => setSku(e.target.value)}
+            required
+            className="w-full mr-2 p-2 border border-gray-300 rounded"
+          />
+          <input
+            type="number"
+            placeholder="Stock quantity*"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+            required
+            min="0"
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
 
         <CategoryDropdowns
           setCategory={setCategory}
           setParentCategory={setParentCategory}
           setSubParentCategory={setSubParentCategory}
-        />
-
-        <input
-          type="number"
-          placeholder="Stock quantity*"
-          value={stock}
-          onChange={(e) => setStock(e.target.value)}
-          required
-          min="0"
-          className="w-full p-2 border border-gray-300 rounded"
         />
         <div>
           <h2 className="text-lg mb-2">Attributes</h2>
@@ -209,25 +211,28 @@ const AddProduct = () => {
           />
           Featured Product
         </label>
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="out-of-stock">Out of Stock</option>
-        </select>
-        <input
-          type="text"
-          placeholder="Tags (comma separated)"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
+        <div className="flex">
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full mr-2 p-2 border border-gray-300 rounded"
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="out-of-stock">Out of Stock</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Tags (comma separated)"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+
         <button
           type="submit"
-          className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="w-full p-2 font-bold bg-red-500 text-white rounded hover:bg-blue-700"
         >
           Add Product
         </button>

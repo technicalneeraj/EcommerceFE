@@ -9,7 +9,7 @@ const UserData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await apiRequest('GET', '/userdata');
+        const response = await apiRequest('GET', '/user-data');
         setData(response.data.message);
       } catch (error) {
         console.error(error);

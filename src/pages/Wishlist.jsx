@@ -67,7 +67,7 @@ const Wishlist = () => {
                 />
               ))}
           </div>
-          <div className="mb-9"></div>
+          {/* <div className="mb-9"></div> */}
         </div>
       )}
     </div>

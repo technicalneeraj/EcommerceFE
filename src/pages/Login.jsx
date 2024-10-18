@@ -16,15 +16,15 @@ const Login = () => {
 
     const handleLogin=async(e)=>{
         e.preventDefault();
-        if(!email && !password){
-          return toast.error("Please enter the email and password");
-        }
-        else if(!email){
-          return toast.error("Please enter the email");
-        }
-        else if(!password){
-          return toast.error("Please enter the password");
-        }
+        // if(!email && !password){
+        //   return toast.error("Please enter the email and password");
+        // }
+        // else if(!email){
+        //   return toast.error("Please enter the email");
+        // }
+        // else if(!password){
+        //   return toast.error("Please enter the password");
+        // }
         try{
         const response = await apiRequest('POST', '/um/user/login', { email:email,password:password});
         if(response.status===200){
@@ -37,7 +37,7 @@ const Login = () => {
         }
       }catch(error){
         setIsLog(false);
-        console.log(error);
+        toast.error(error.response.data.message);
       }
       
     }

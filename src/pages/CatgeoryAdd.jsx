@@ -95,7 +95,7 @@ const CategoryAdd = () => {
           />
         </div>
       
-        <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+        <button type="submit" className="w-full bg-red-500 text-white py-2 rounded hover:bg-green-700">
           Add Category
         </button>
       </form>

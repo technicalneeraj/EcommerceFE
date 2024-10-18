@@ -59,6 +59,9 @@ const Forgotpassword = () => {
 
     const newpasswordchange=async(e)=>{
         e.preventDefault();
+        if(newpassword.length<6){
+           return toast.error("Password must be at least 6 characters long.");
+        }
         try{
             const response = await apiRequest('PATCH', '/change-password', { email, newpassword });
             if(response.status==200){

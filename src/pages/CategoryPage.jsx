@@ -1,16 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { apiRequest } from "../utility/Api";
 import ItemCategoryCard from "../components/ItemCategoryCard";
+import { authContext } from "../utility/AuthContext";
 
 const CategoryPage = () => {
+  const { userData } = useContext(authContext);
   const { Pcategory, category } = useParams();
   const [bannerImage, setBannerImage] = useState("");
   const [products, setProducts] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
+
   useEffect(() => {
     fetchBanner();
     fetchProduct();
   }, [Pcategory, category]);
+
+  useEffect(() => {
+    if (userData) {
+      const fetchWishlist = async () => {
+        try {
+          const { status, data } = await apiRequest(
+            "GET",
+            "/user/send-wishlist"
+          );
+          if (status === 200) {
+            setWishlist(data.wishlistData);
+          }
+        } catch (error) {
+          console.error("Error fetching wishlist:", error);
+        }
+      };
+      fetchWishlist();
+    }
+  }, []);
 
   const fetchProduct = async () => {
     const product = await apiRequest(
@@ -32,12 +55,18 @@ const CategoryPage = () => {
         <img src={bannerImage} />
       </div>
       <div className="flex container mx-auto justify-center">
-        <div className="bg-red-400">         
-        </div>
+        <div className="bg-red-400"></div>
         <div className="w-full flex justify-center flex-wrap ">
-          {products.map((product) => (
-            <ItemCategoryCard product={product} key={product._id} />
-          ))}
+          {products.map((product) => {
+            const isFavorited = wishlist.some((item) => item === product._id);
+            return (
+              <ItemCategoryCard
+                product={product}
+                key={product._id}
+                isFavoriteInDb={isFavorited}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

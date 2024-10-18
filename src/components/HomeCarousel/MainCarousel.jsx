@@ -42,28 +42,28 @@ const MainCarousel = () => {
     carouselRef.current.slidePrev();
   };
   return (
-    <div className="flex justify-center relative items-center">
-      <AliceCarousel
-        ref={carouselRef}
-        mouseTracking
-        items={items}
-        controlsStrategy="alternate"
-        disableButtonsControls
-        infinite
-      />
-      <button
-        onClick={goToPrev}
-        className=" left-5 top-64 absolute p-2  rounded"
-      >
-        <ArrowBackIosIcon />
-      </button>
-      <button
-        onClick={goToNext}
-        className="right-5 top-64 absolute p-2  rounded"
-      >
-        <ArrowForwardIosIcon />
-      </button>
-    </div>
+    <>
+      <div className="flex justify-center relative items-center">
+          <AliceCarousel
+            ref={carouselRef}
+            mouseTracking
+            items={items}
+            controlsStrategy="alternate"
+            disableButtonsControls
+            infinite
+          />
+        <div className="absolute top-1/2 left-4">
+          <button onClick={goToPrev} className="rounded">
+            <ArrowBackIosIcon />
+          </button>
+        </div>
+        <div className="absolute top-1/2 right-4">
+          <button onClick={goToNext} className="rounded">
+            <ArrowForwardIosIcon />
+          </button>
+        </div>
+      </div>
+    </>
   );
 };
 

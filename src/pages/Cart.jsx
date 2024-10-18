@@ -13,16 +13,18 @@ const Cart = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [removeOrWishlist, setRemoveOrWishlist] = useState(null);
-
+  const[sizeSelected,setSizeSelected]=useState("");
+  const shirtSize = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+  
   useEffect(() => {
-    if(isLog){
-    const fetchingCart = async () => {
-      const response = await apiRequest("GET", "/user/cart");
-      setCart(response.data.cart);
-      setItems(response.data.cart.cartItems);
-    };
-    fetchingCart();
-  }
+    if (isLog) {
+      const fetchingCart = async () => {
+        const response = await apiRequest("GET", "/user/cart");
+        setCart(response.data.cart);
+        setItems(response.data.cart.cartItems);
+      };
+      fetchingCart();
+    }
   }, [cart]);
 
   const removeItemHandler = async (id) => {
@@ -35,25 +37,27 @@ const Cart = () => {
 
   const addToWishlistHandler = async (id) => {
     console.log(id);
-    try{
-      const response=await apiRequest("PATCH",`/user/remove-from-cart-add-to-wishlist/${id}`);
+    try {
+      const response = await apiRequest(
+        "PATCH",
+        `/user/remove-from-cart-add-to-wishlist/${id}`
+      );
       toast.success("Product added to your wishlist");
-      }catch(error){
-        toast.error(error.response.data.message);
-      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
-  
 
   return (
     <div>
       <div className="text-center text-gray-700 font-bold">
         MY BAG -------- ADDRESS -------- PAYMENT
       </div>
-      {cart !== undefined && cart.totalItem !== 0 && isLog ?  (
-        <div className="flex justify-center p-5">
+      {cart !== undefined && cart.totalItem !== 0 && isLog ? (
+        <div className="flex flex-wrap justify-center p-5">
           <div>
             {items.map((item) => (
-              <div key={item._id} className="border pb-2 flex flex-col">
+              <div key={item._id} className="border pb-2 flex flex-wrap flex-col">
                 <div className="flex">
                   <div className="h-64 overflow-hidden">
                     <img
@@ -64,23 +68,30 @@ const Cart = () => {
                     />
                   </div>
                   <div className="w-full">
-                    <div className="flex justify-between p-3">
+                    <div className="flex flex-wrap justify-between p-3">
                       <div>
                         <div className="font-bold">{item.product.name}</div>
                         <div className="text-gray-400">
                           {item.product.category.type}
                         </div>
-                        <div className="flex font-bold mt-4">
+                        <div className="flex flex-wrap font-bold mt-4">
                           <div className="border border-black mr-2 rounded p-2 pr-5">
-                            Size: {item.size}
+                            Size:
+                            <select defaultValue={item.size} className="ml-1 bg-white border-none">
+                              {shirtSize.map((size) => (
+                                <option key={size} value={size} onChange={(e)=>setSizeSelected(e.target.value)}>
+                                  {size}
+                                </option>
+                              ))}
+                            </select>
                           </div>
-                          <div className="border border-black rounded p-2 pr-5">
+                          <div className="border border-black rounded p-2 md:pr-5 sm:mt-0 mt-2">
                             Qty: {item.quantity}
                           </div>
                         </div>
                       </div>
-                      <div className="font-bold">
-                        <div className="text-end">
+                      <div className=" flex md:flex-col flex-nowrap flex-row font-bold md:mt-0 mt-2">
+                        <div className="text-end md:mr-0 mr-2">
                           &#8377; {item.product.price}
                         </div>
                         <div className="text-gray-700">
@@ -115,7 +126,7 @@ const Cart = () => {
               </div>
             ))}
           </div>
-          <div className="ml-4 w-1/5">
+          <div className="ml-4 w-96">
             <div className="w-full">
               <div className="p-2">BILLING DETAILS</div>
               <div>
