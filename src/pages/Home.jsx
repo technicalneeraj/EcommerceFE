@@ -6,16 +6,19 @@ import Product from "../components/Product";
 import CategoryCard from "../components/CategoryCard";
 import { useLocation, useParams } from "react-router-dom";
 import { useCategory } from "../utility/CategoryContext";
+import LoaderModal from "../components/LoderModal";
 
 const Home = () => {
   const { setCurrentCategory, currentCategory } = useCategory();
   const location = useLocation();
   const [data, setData] = useState([]);
+  const [isLoading,setIsLoading]=useState(false);
 
   useEffect(() => {
     const category = location.pathname.split('/').pop(); 
     setCurrentCategory(category);
     const fetchData = async () => {
+      setIsLoading(true);
       if (currentCategory) {
         try {
           const response = await apiRequest(
@@ -24,6 +27,7 @@ const Home = () => {
           );
           if (response.status === 200) {
             setData(response.data);
+            setIsLoading(false);
           }
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -32,10 +36,12 @@ const Home = () => {
     };
 
     fetchData();
+    
   }, [currentCategory]);
 
   return (
     <>
+      <LoaderModal isOpen={isLoading} text={"Wait for a while"}/>
       <MainCarousel />
       <h1 className="text-2xl font-extrabold py-5 text-center">Categories</h1>
       <div className="flex flex-wrap justify-center">

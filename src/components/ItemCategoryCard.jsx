@@ -1,19 +1,19 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { apiRequest } from "../utility/Api";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { useContext } from "react";
 import { authContext } from "../utility/AuthContext";
 
-const ItemCategoryCard = ({ product,isFavoriteInDb }) => {
+const ItemCategoryCard = ({ product, isFavoriteInDb }) => {
   const { isLog } = useContext(authContext);
   const [isFavorited, setIsFavorited] = useState(false);
   const navigate = useNavigate();
 
   const handleHeartClicked = async (ID) => {
-    if(!isLog){
+    if (!isLog) {
       toast.error("Please Login First");
       navigate("/login");
       return;
@@ -43,16 +43,32 @@ const ItemCategoryCard = ({ product,isFavoriteInDb }) => {
         <div className="mb-4 mt-2">
           <div className="bold">{product.name}</div>
           <hr />
-          <div className="font-bold">
-            &#8377;
-            {product.price}
-          </div>
+          {product.discountPrice > 0 ? (
+            <div className="flex">
+              <div className="font-bold mr-2">
+                &#8377;
+                {product.price-product.discountPrice}
+               
+              </div>
+              <div className="line-through text-gray-400">&#8377;
+              {product.price}</div>
+            </div>
+          ) : (
+            <div className="font-bold">
+              &#8377;
+              {product.price}
+            </div>
+          )}
         </div>
         <button
           onClick={() => handleHeartClicked(product._id)}
           className="absolute top-2 rounded-full p-1 right-2 text-red-500 bg-white  cursor-pointer border-none"
         >
-          {isFavoriteInDb || isFavorited ?<FavoriteIcon/>:<FavoriteBorderIcon/>}
+          {isFavoriteInDb || isFavorited ? (
+            <FavoriteIcon />
+          ) : (
+            <FavoriteBorderIcon />
+          )}
         </button>
       </div>
     </>

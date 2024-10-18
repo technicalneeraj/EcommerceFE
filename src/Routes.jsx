@@ -27,6 +27,7 @@ import CategoryPage from "./pages/CategoryPage.jsx";
 import PrivateRoutes from "./PrivateRoutes.jsx";
 import AdminRoutes from "./AdminRoutes.jsx";
 import Address from "./pages/Address.jsx";
+import PublicRoute from "./PublicRoutes.jsx";
 
 function Routes() {
   const router = createBrowserRouter(
@@ -36,11 +37,11 @@ function Routes() {
         <Route path="/men" element={<Home />} />
         <Route path="/women" element={<Home />} />
         <Route path="/kids" element={<Home />} />
-
-        <Route path="/" element={<HomeSign />}>
-          <Route path="/register" element={<Signup />} />
-          <Route path="/otpverification" element={<OtpPage />} />
-          <Route path="/login" element={<Login />} />
+        <Route element={<PublicRoute />}>
+          <Route path="/" element={<HomeSign />}>
+            <Route path="/register" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+          </Route>
         </Route>
 
         <Route path="/cart" element={<Cart />} />
@@ -52,7 +53,7 @@ function Routes() {
 
         <Route element={<PrivateRoutes />}>
           <Route path="/profile" element={<Profile />} />
-          <Route path="/profile-address" element={<Address/>}/>
+          <Route path="/profile-address" element={<Address />} />
           <Route element={<AdminRoutes />}>
             <Route path="/edit-product/:id" element={<EditProduct />} />
             <Route path="/userdata" element={<UserData />} />

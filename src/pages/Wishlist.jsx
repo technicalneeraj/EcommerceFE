@@ -52,7 +52,7 @@ const Wishlist = () => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col container mx-auto">
+        <div className="flex flex-col container mx-auto pb-5">
           <div className="ml-3 mb-3">
             <span className="font-bold">My Wishlist </span>
             <span className="text-gray-500">({itemsCount} items)</span>

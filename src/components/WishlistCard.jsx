@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import WishlistToCartModal from "./WishlistToCartModal";
 
-const WishlistCard = ({ item,setWishListItems }) => {
+const WishlistCard = ({ item, setWishListItems }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
@@ -24,12 +24,16 @@ const WishlistCard = ({ item,setWishListItems }) => {
     }
   };
   const addToCart = async () => {
-    const data={
-     size: selectedSize,
-     quantity:1
-    }
-    const response = await apiRequest("POST", `/user/add-to-cart/${item._id}`,data);
-    await apiRequest("DELETE",`/user/remove-from-wishlist/${item._id}`);
+    const data = {
+      size: selectedSize,
+      quantity: 1,
+    };
+    const response = await apiRequest(
+      "POST",
+      `/user/add-to-cart/${item._id}`,
+      data
+    );
+    await apiRequest("DELETE", `/user/remove-from-wishlist/${item._id}`);
     toast.success(response.data.message);
   };
   return (
@@ -61,7 +65,16 @@ const WishlistCard = ({ item,setWishListItems }) => {
         </div>
         <div className="p-2 font-extrabold">{item.name}</div>
         <hr />
-        <div className="p-3 font-bold">&#8377; {item.price}</div>
+        <div>
+          {item.discountPrice > 0 ? (
+            <div className="p-3 font-bold">&#8377; {item.price - item.discountPrice} 
+            <span className="line-through text-gray-400 ml-1"> &#8377; {item.price}</span>
+            </div>
+          ) : (
+            <div className="p-3 font-bold">&#8377; {item.price}</div>
+          )}
+        </div>
+
         <hr />
         <div className="text-center p-2" onClick={() => setIsModalOpen(true)}>
           MOVE TO CART

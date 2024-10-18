@@ -1,25 +1,63 @@
-import React, { useContext,useState } from 'react'
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import React, { useContext, useEffect, useState } from "react";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import NewAddressModal from "./NewAddressModal";
+import { apiRequest } from "../utility/Api";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-const AddressCard = ({address}) => {
+const AddressCard = ({ address }) => {
+    const navigate=useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const removeAddressHandler=async()=>{
+    try{
+        const response=await apiRequest("DELETE",`/address/${address._id}`);
+        toast.success(response.data.message);
+        navigate("/profile-address");
+    }
+    catch(error){
+        toast.error(error.response.data.message);
+    }
+
+  }
 
   return (
-    <div>
-        {
-            address ? <div className='border'></div> :
-            
-                <div className='border flex flex-col items-center h-52 w-72 justify-center'>
-                    <div>
-                    <AddCircleIcon/>
-                   </div>
-                   <div>
-                    Add new address
-                   </div>
-                </div>
-        }
-        
-    </div>
-  )
-}
+    <>
 
-export default AddressCard
+    <div>
+      {address ? (
+        <div className="border bg-gray-200 flex flex-wrap flex-col  h-52 w-72  items-start pt-6 pl-5 space-y-1 mr-2">
+            <div className="font-bold capitalize">{address.firstName+" " +address.lastName}</div>
+            <div>{address.buildingName}</div>
+            <div>{address.street}</div>
+            {
+                address.landmark!=="" && <div>{address.landmark}</div>
+            }
+            <div className="capitalize">{address.city} - {address.postalCode}</div>
+            <div>Mobile <span className="font-bold">{address.phone}</span></div>
+            <div className="flex">
+                <div className="font-bold text-sm  cursor-pointer border bg-white p-1 rounded-xl mr-2">EDIT</div>
+                <div className="font-bold text-sm cursor-pointer border bg-white p-1 rounded-xl" onClick={removeAddressHandler}>REMOVE</div>
+            </div>
+        </div>
+      ) : (
+        <div className="border bg-gray-200 flex flex-wrap flex-col  h-52 w-72  items-center justify-center">
+          <div onClick={()=>{setIsModalOpen(true)}} className="cursor-pointer">
+            <AddCircleIcon />
+          </div>
+          <div onClick={()=>{setIsModalOpen(true)}} className="cursor-pointer">Add new address</div>
+        </div>
+      )}
+    
+    </div>
+      <NewAddressModal
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      onConfirm={() => {
+        setIsModalOpen(false);
+      }}
+    />
+    </>
+  );
+};
+
+export default AddressCard;

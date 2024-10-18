@@ -42,7 +42,7 @@ const Login = () => {
       
     }
     const createaccounthandler=()=>{
-        navigate("/register",{ state: { alreadyhave: false } });
+        navigate("/register");
     }
   return (
     <>

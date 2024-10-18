@@ -65,7 +65,20 @@ const Product = () => {
             />
             <div className="mb-3 ml-3 pl-2">
               <div className="text-sm">{product.name}</div>
-              <div className="text-gray-400">&#8377; {product.price}</div>
+              <div>
+                {product.discountPrice > 0 ? (
+                  <div className="font-bold">
+                    &#8377; {product.price - product.discountPrice}
+                    <span className="line-through text-gray-400 ml-1">
+                      {" "}
+                      &#8377; {product.price}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="font-bold">&#8377; {product.price}</div>
+                )}
+              </div>
+              
             </div>
           </div>
         );

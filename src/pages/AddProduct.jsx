@@ -22,6 +22,7 @@ const AddProduct = () => {
   const [status, setStatus] = useState("active");
   const [tags, setTags] = useState("");
   const [loading, setLoading] = useState(false);
+  const [discountedPrice,setDiscountedPrice]=useState("");
   const [attributes, setAttributes] = useState([{ name: "", value: "" }]);
   const navigate = useNavigate();
 
@@ -49,6 +50,7 @@ const AddProduct = () => {
     formData.append("isFeatured", isFeatured);
     formData.append("status", status);
     formData.append("sku", sku);
+    formData.append("discountPrice",discountedPrice);
     formData.append(
       "tags",
       tags
@@ -84,7 +86,7 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow-2xl mb-5 mt-5 shadow-red-800">
+    <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow-2xl mb-5 shadow-red-800">
       <h1 className="text-2xl font-semibold text-center mb-4">
         Add New Product
       </h1>
@@ -108,15 +110,23 @@ const AddProduct = () => {
         <div className="flex">
           <input
             type="number"
-            placeholder="Price of product*"
+            placeholder="Price*"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
             className="w-full p-2  mr-2 border border-gray-300 rounded"
           />
+           <input
+            type="number"
+            placeholder="Discounted Price"
+            value={discountedPrice}
+            onChange={(e) => setDiscountedPrice(e.target.value)}
+            required
+            className="w-full p-2  mr-2 border border-gray-300 rounded"
+          />
           <input
             type="text"
-            placeholder="Brand of product*"
+            placeholder="Brand*"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
             required

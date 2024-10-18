@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { apiRequest } from '../utility/Api';
 import { toast } from 'react-toastify';
 
-const OtpPage = () => {
-    const location = useLocation();
+const OtpPage = ({ email, firstname, lastname, phone, password }) => {
     const navigate = useNavigate();
-    const { email, firstname, lastname, phone,password } = location.state || {};  
     const [otp,setOtp]=useState("");
     const [respmsg,setRespmsg]=useState("");
 

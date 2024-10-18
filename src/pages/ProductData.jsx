@@ -12,9 +12,10 @@ import { useNavigate } from "react-router-dom";
 import { authContext } from "../utility/AuthContext";
 import YesOrNoModal from "../components/YesOrNoModal";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import LoaderModal from "../components/LoderModal";
 
 const ProductData = () => {
-  const { userRole,userData } = useContext(authContext);
+  const { userRole, userData } = useContext(authContext);
   const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState({});
@@ -29,13 +30,13 @@ const ProductData = () => {
   const [isAlreadyInCart, setIsAlreadyInCart] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
-
   useEffect(() => {
-    const fetchdata = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
         const response = await apiRequest("GET", `/product/${id}`);
         setData(response.data.product);
+
         if (response.data.product.category) {
           const catResponse = await apiRequest(
             "GET",
@@ -43,35 +44,50 @@ const ProductData = () => {
           );
           setCategory(catResponse.data.category.type);
         }
-        const tagsArray = response.data.product.tags[0].split(",");
-        setTags(tagsArray);
-        setLoading(false);
+
+        if (
+          response.data.product.tags &&
+          response.data.product.tags.length > 0
+        ) {
+          const tagsArray = response.data.product.tags[0].split(",");
+          setTags(tagsArray);
+        } else {
+          setTags([]);
+        }
       } catch (error) {
-        setLoading(false);
         console.log(error);
         toast.error("Error fetching product data");
+        navigate("/");
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchdata();
+    fetchData();
     checkInWishlist();
   }, [id]);
 
-  const checkInWishlist=async()=>{
-    if(userData){
-    const response=await apiRequest("GET",`/product/check-is-in-wishlist?user=${userData.id}&product=${id}`)
-    if(response.data.data==="yes"){
-      setIsWishlisted(true);
-    }
-    else{
+  const checkInWishlist = async () => {
+    if (userData) {
+      const response = await apiRequest(
+        "GET",
+        `/product/check-is-in-wishlist?user=${userData.id}&product=${id}`
+      );
+      if (response.data.data === "yes") {
+        setIsWishlisted(true);
+      } else {
+        setIsWishlisted(false);
+      }
+    } else {
       setIsWishlisted(false);
     }
-    }else{
-      setIsWishlisted(false);
-    }
-  }
+  };
 
   const wishlistHandler = async () => {
+    if(!userData){
+      toast.error("Please login to add in wishlist");
+      return;
+    }
     setIsWishlisted(!isWishlisted);
     try {
       const response = await apiRequest(
@@ -84,6 +100,10 @@ const ProductData = () => {
     }
   };
   const addToCartHandler = async () => {
+    if(!userData){
+      toast.error("Please login to add in cart");
+      return;
+    }
     if (selectedSize == null) {
       setIsSizeSelected(false);
       return;
@@ -108,7 +128,9 @@ const ProductData = () => {
   };
 
   return loading ? (
-    <>Loading...</>
+    <>
+      <LoaderModal isOpen={loading} text={"Wait for a while..."} />
+    </>
   ) : (
     <div className="container mx-auto flex justify-center">
       <div className="left1 p-4">
@@ -144,8 +166,15 @@ const ProductData = () => {
         )}
         <hr />
         <div>
-          <div className="font-extrabold text-2xl">
-            &#8377; &nbsp;{data.price}
+          <div>
+            {data.discountPrice > 0 ? (
+              <div className="flex space-x-2">
+                <div className="font-extrabold text-2xl">&#8377;{data.price-data.discountPrice}</div>
+                <div className="line-through mt-1 text-gray-400">&#8377; {data.price}</div>
+              </div>
+            ) : (
+              <div className="font-extrabold text-2xl">&#8377; &nbsp;{data.price} </div>
+            )}
           </div>
           <div className="text-gray-500">MRP incl. of all taxes</div>
         </div>

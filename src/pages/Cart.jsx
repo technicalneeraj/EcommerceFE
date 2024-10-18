@@ -13,9 +13,9 @@ const Cart = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [removeOrWishlist, setRemoveOrWishlist] = useState(null);
-  const[sizeSelected,setSizeSelected]=useState("");
+  const [sizeSelected, setSizeSelected] = useState("");
   const shirtSize = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
-  
+
   useEffect(() => {
     if (isLog) {
       const fetchingCart = async () => {
@@ -57,7 +57,10 @@ const Cart = () => {
         <div className="flex flex-wrap justify-center p-5">
           <div>
             {items.map((item) => (
-              <div key={item._id} className="border pb-2 flex flex-wrap flex-col">
+              <div
+                key={item._id}
+                className="border pb-2 flex flex-wrap flex-col"
+              >
                 <div className="flex">
                   <div className="h-64 overflow-hidden">
                     <img
@@ -77,9 +80,18 @@ const Cart = () => {
                         <div className="flex flex-wrap font-bold mt-4">
                           <div className="border border-black mr-2 rounded p-2 pr-5">
                             Size:
-                            <select defaultValue={item.size} className="ml-1 bg-white border-none">
+                            <select
+                              defaultValue={item.size}
+                              className="ml-1 bg-white border-none"
+                            >
                               {shirtSize.map((size) => (
-                                <option key={size} value={size} onChange={(e)=>setSizeSelected(e.target.value)}>
+                                <option
+                                  key={size}
+                                  value={size}
+                                  onChange={(e) =>
+                                    setSizeSelected(e.target.value)
+                                  }
+                                >
                                   {size}
                                 </option>
                               ))}
@@ -91,8 +103,23 @@ const Cart = () => {
                         </div>
                       </div>
                       <div className=" flex md:flex-col flex-nowrap flex-row font-bold md:mt-0 mt-2">
-                        <div className="text-end md:mr-0 mr-2">
-                          &#8377; {item.product.price}
+                        <div className=" md:mr-0 mr-2">
+                          {item.product.discountPrice > 0 ? (
+                            <div className="flex space-x-2 justify-end">
+                              <div className="font-extrabold ">
+                                &#8377;
+                                {item.product.price -
+                                  item.product.discountPrice}
+                              </div>
+                              <div className="line-through text-gray-400">
+                                &#8377; {item.product.price}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="font-extrabold text-end">
+                              &#8377; &nbsp;{item.product.price}{" "}
+                            </div>
+                          )}
                         </div>
                         <div className="text-gray-700">
                           MRP incl. of all taxes
@@ -135,17 +162,18 @@ const Cart = () => {
                   <div>&#8377; {cart.totalPrice}</div>
                 </div>
                 <div className="flex justify-between border p-3">
-                  <div>GST</div>
-                  <div>&#8377; {cart.totalPrice * (18 / 100)}</div>
+                  <div>Discounted Price</div>
+                  <div> - &#8377; {cart.totalDiscountPrice}</div>
                 </div>
                 <div className="flex justify-between border p-3">
-                  <div>Shipping Charges</div>
-                  <div>&#8377; 0</div>
+                  <div>GST</div>
+                  <div>&#8377; {(cart.totalPrice -cart.totalDiscountPrice)* (18 / 100)}</div>
                 </div>
+
                 <div className="flex justify-between border p-3">
                   <div>Total Amount</div>
                   <div>
-                    &#8377; {cart.totalPrice + cart.totalPrice * (18 / 100)}
+                    &#8377; {((cart.totalPrice -cart.totalDiscountPrice)) +( (cart.totalPrice -cart.totalDiscountPrice)* (18 / 100))}
                   </div>
                 </div>
               </div>
