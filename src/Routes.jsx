@@ -26,6 +26,7 @@ import BannerUpload from "./pages/BannerUpload.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
 import PrivateRoutes from "./PrivateRoutes.jsx";
 import AdminRoutes from "./AdminRoutes.jsx";
+import Address from "./pages/Address.jsx";
 
 function Routes() {
   const router = createBrowserRouter(
@@ -51,6 +52,7 @@ function Routes() {
 
         <Route element={<PrivateRoutes />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile-address" element={<Address/>}/>
           <Route element={<AdminRoutes />}>
             <Route path="/edit-product/:id" element={<EditProduct />} />
             <Route path="/userdata" element={<UserData />} />
