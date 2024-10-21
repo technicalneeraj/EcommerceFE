@@ -126,10 +126,9 @@ const AddProduct = () => {
           />
           <input
             type="text"
-            placeholder="Brand*"
+            placeholder="Brand"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
-            required
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>

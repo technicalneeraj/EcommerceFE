@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
 
-const NewAddressModal = ({ isOpen, onClose, onConfirm, text}) => {
+const NewAddressModal = ({ isOpen, onClose, onConfirm, text }) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -29,9 +29,13 @@ const NewAddressModal = ({ isOpen, onClose, onConfirm, text}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await apiRequest("POST", "/user/address", formData);
-    toast.success(response.data.message);
-    onConfirm();
+    try {
+      const response = await apiRequest("POST", "/user/address", formData);
+      toast.success(response.data.message);
+      onConfirm();
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (

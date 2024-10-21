@@ -3,23 +3,20 @@ import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
 
 const EditAddressModal = ({ isOpen, onClose, onConfirm, text,address}) => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    houseNumber: "",
-    street: "",
-    landmark: "",
-    postalCode: "",
-    city: "",
-    country: "",
-    state: "",
-    phone: "",
-    isDefault: false,
-  });
-
   if (!isOpen) return null;
-
-  
+  const [formData, setFormData] = useState({
+    firstName: address.firstName,
+    lastName: address.lastName,
+    houseNumber: address.buildingName,
+    street: address.street,
+    landmark: address.landmark,
+    postalCode: address.postalCode,
+    city: address.city,
+    country: address.country,
+    state: address.city,
+    phone: address.phone,
+    isDefault: address.isDefault,
+  });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -31,9 +28,15 @@ const EditAddressModal = ({ isOpen, onClose, onConfirm, text,address}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await apiRequest("POST", "/user/address", formData);
-    toast.success(response.data.message);
-    onConfirm();
+    try{
+      const response = await apiRequest("PATCH", `/user/address/${address._id}`, formData);
+      toast.success(response.data.message);
+      onConfirm();
+    }
+    catch(error){
+      toast.error(error.response.data.message);
+    }
+   
   };
 
   return (

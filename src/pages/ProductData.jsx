@@ -2,9 +2,17 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { apiRequest } from "../utility/Api";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import FacebookIcon from "@mui/icons-material/Facebook";
+// import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+// import FacebookIcon from "@mui/icons-material/Facebook";
 import XIcon from "@mui/icons-material/X";
+import {
+  FacebookShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  WhatsappIcon,
+  TwitterShareButton,
+  TwitterIcon,
+} from "react-share";
 import { toast } from "react-toastify";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -18,6 +26,7 @@ const ProductData = () => {
   const { userRole, userData } = useContext(authContext);
   const { id } = useParams();
   const navigate = useNavigate();
+  const productUrl = `http://localhost:5173/product/${id}`;
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("");
@@ -84,7 +93,7 @@ const ProductData = () => {
   };
 
   const wishlistHandler = async () => {
-    if(!userData){
+    if (!userData) {
       toast.error("Please login to add in wishlist");
       return;
     }
@@ -100,7 +109,7 @@ const ProductData = () => {
     }
   };
   const addToCartHandler = async () => {
-    if(!userData){
+    if (!userData) {
       toast.error("Please login to add in cart");
       return;
     }
@@ -132,12 +141,12 @@ const ProductData = () => {
       <LoaderModal isOpen={loading} text={"Wait for a while..."} />
     </>
   ) : (
-    <div className="container mx-auto flex justify-center">
+    <div className="container pl-16 md:pl-0 mx-auto flex md:flex-row flex-col-reverse justify-center">
       <div className="left1 p-4">
-        <div className="flex flex-wrap justify-start">
+        <div className="flex flex-wrap items-center justify-center">
           {data.images &&
             data.images.map((image) => (
-              <div className="w-1/2 p-2" key={image.url}>
+              <div className="p-2" key={image.url}>
                 <img src={image.url} alt="Product" className="w-full" />
               </div>
             ))}
@@ -169,17 +178,23 @@ const ProductData = () => {
           <div>
             {data.discountPrice > 0 ? (
               <div className="flex space-x-2">
-                <div className="font-extrabold text-2xl">&#8377;{data.price-data.discountPrice}</div>
-                <div className="line-through mt-1 text-gray-400">&#8377; {data.price}</div>
+                <div className="font-extrabold text-2xl">
+                  &#8377;{data.price - data.discountPrice}
+                </div>
+                <div className="line-through mt-1 text-gray-400">
+                  &#8377; {data.price}
+                </div>
               </div>
             ) : (
-              <div className="font-extrabold text-2xl">&#8377; &nbsp;{data.price} </div>
+              <div className="font-extrabold text-2xl">
+                &#8377; &nbsp;{data.price}{" "}
+              </div>
             )}
           </div>
           <div className="text-gray-500">MRP incl. of all taxes</div>
         </div>
         <div className="font-bold">Please select a size.</div>
-        <div className="flex space-x-3">
+        <div className="flex space-x-3 flex-wrap md:flex-nowrap">
           {sizes.map((size) => (
             <div
               key={size}
@@ -245,10 +260,19 @@ const ProductData = () => {
         </div>
         <div className="mt-3 flex space-x-2">
           <div>Share</div>
-          <WhatsAppIcon className="cursor-pointer" />
-          <FacebookIcon className="cursor-pointer" />
-          <XIcon className="cursor-pointer" />
-          <InstagramIcon className="cursor-pointer" />
+          <FacebookShareButton url={productUrl} quote={data.description}>
+            <FacebookIcon size={32} round />
+          </FacebookShareButton>
+          <WhatsappShareButton url={productUrl} title={data.name}>
+            <WhatsappIcon size={32} round />
+          </WhatsappShareButton>
+          <TwitterShareButton
+            url={productUrl}
+            title={data.name}
+            hashtags={["bro"]}
+          >
+            <TwitterIcon size={32} round />
+          </TwitterShareButton>
         </div>
         <div className="pt-5">
           <div

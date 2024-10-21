@@ -4,17 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
 import YesOrNoModal from "../components/YesOrNoModal";
-import {loadStripe} from '@stripe/stripe-js';
+import { loadStripe } from "@stripe/stripe-js";
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { isLog } = useContext(authContext);
+  const { isLog, userData } = useContext(authContext);
   const [cart, setCart] = useState("");
   const [items, setItems] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [removeOrWishlist, setRemoveOrWishlist] = useState(null);
   const shirtSize = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+  const [defaultAddress, setDefaultAddress] = useState({});
   const quantity = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   useEffect(() => {
     if (isLog) {
@@ -24,8 +25,11 @@ const Cart = () => {
         setItems(response.data.cart.cartItems);
       };
       fetchingCart();
+      setDefaultAddress(
+        userData.address.find((addr) => addr.isDefault === true)
+      );
     }
-  }, [isLog, cart, items]);
+  }, [isLog, cart, items, defaultAddress]);
 
   const removeItemHandler = async (id) => {
     const response = await apiRequest("PATCH", `/user/update-cart/${id}`);
@@ -58,32 +62,34 @@ const Cart = () => {
     }
   };
 
-  const quantityHandler = async(item, currQuantity,initialQuantity) => {
+  const quantityHandler = async (item, currQuantity, initialQuantity) => {
     try {
       await apiRequest("PATCH", `/user/update-cartItem-quantity/${item._id}`, {
-        currQuantity,initialQuantity
+        currQuantity,
+        initialQuantity,
       });
       toast.success("Quantity updated Successfully");
-    }catch(error){
+    } catch (error) {
       toast.error(error.response.data.message);
     }
     console.log(item);
     console.log(currQuantity);
-
   };
 
-  const makePayment=async()=>{
-      const stripe=await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+  const makePayment = async () => {
+    const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-      const response=await apiRequest("POST","/user/create-checkout-session",{cart});
-      const result=stripe.redirectToCheckout({
-        sessionId:response.data.id
-      })
-      toast.success("Your order is maded");
-      if(result.error){
-        toast.error(result.error);
-      }
-  }
+    const response = await apiRequest("POST", "/user/create-checkout-session", {
+      cart,
+    });
+    const result = stripe.redirectToCheckout({
+      sessionId: response.data.id,
+    });
+    toast.success("Your order is maded");
+    if (result.error) {
+      toast.error(result.error);
+    }
+  };
 
   return (
     <div>
@@ -93,6 +99,30 @@ const Cart = () => {
       {cart !== "" && cart.totalItem !== 0 && isLog ? (
         <div className="flex flex-wrap justify-center p-5">
           <div>
+            <div>
+              {defaultAddress ? (
+                <div className="border pt-2 pl-2 pb-2 flex justify-between items-center">
+                  <div >
+                  <div className="font-bold">
+                    Deliver To: {defaultAddress.firstName}{" "}
+                    {defaultAddress.lastName}, {defaultAddress.postalCode}
+                  </div>
+                  <div>
+                    {defaultAddress.buildingName}, {defaultAddress.street} 
+                  </div>
+                  <div>
+                    {defaultAddress.city} ,{defaultAddress.state}
+                  </div>
+                </div>
+                <div className="mr-2 font-bold text-green-900">
+                  <button onClick={()=>navigate("/profile-address")}>CHANGE</button>
+                </div>
+                  </div>
+                 
+              ) : (
+                <div></div>
+              )}
+            </div>
             {items.map((item) => (
               <div
                 key={item._id}
@@ -137,7 +167,11 @@ const Cart = () => {
                               defaultValue={item.quantity}
                               className="ml-1 bg-white border-0 focus:outline-none"
                               onChange={(e) =>
-                                quantityHandler(item, e.target.value,item.quantity)
+                                quantityHandler(
+                                  item,
+                                  e.target.value,
+                                  item.quantity
+                                )
                               }
                             >
                               {quantity.map((quan) => (
@@ -227,14 +261,19 @@ const Cart = () => {
                   <div>Total Amount</div>
                   <div>
                     &#8377;{" "}
-                    {Math.round(cart.totalPrice -
-                      cart.totalDiscountPrice +
-                      (cart.totalPrice - cart.totalDiscountPrice) * (18 / 100))}
+                    {Math.round(
+                      cart.totalPrice -
+                        cart.totalDiscountPrice +
+                        (cart.totalPrice - cart.totalDiscountPrice) * (18 / 100)
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-            <div onClick={makePayment} className="hover:bg-green-700 cursor-pointer border mt-3 p-2 text-center font-bold text-white bg-green-800">
+            <div
+              onClick={makePayment}
+              className="hover:bg-green-700 cursor-pointer border mt-3 p-2 text-center font-bold text-white bg-green-800"
+            >
               PLACE ORDER
             </div>
           </div>

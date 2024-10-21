@@ -26,7 +26,8 @@ const Login = () => {
         //   return toast.error("Please enter the password");
         // }
         try{
-        const response = await apiRequest('POST', '/um/user/login', { email:email,password:password});
+          console.log({email})
+        const response = await apiRequest('POST', '/um/user/login', { email,password:password});
         if(response.status===200){
           toast.success(response.data.message);
           setUserData(response.data.user);
@@ -36,6 +37,7 @@ const Login = () => {
           navigate(from);
         }
       }catch(error){
+        console.log(error);
         setIsLog(false);
         toast.error(error.response.data.message);
       }
