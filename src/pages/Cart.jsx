@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
 import YesOrNoModal from "../components/YesOrNoModal";
+import {loadStripe} from '@stripe/stripe-js';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -13,9 +14,8 @@ const Cart = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [removeOrWishlist, setRemoveOrWishlist] = useState(null);
-  const [sizeSelected, setSizeSelected] = useState("");
   const shirtSize = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
-
+  const quantity = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   useEffect(() => {
     if (isLog) {
       const fetchingCart = async () => {
@@ -25,7 +25,7 @@ const Cart = () => {
       };
       fetchingCart();
     }
-  }, [cart]);
+  }, [isLog, cart, items]);
 
   const removeItemHandler = async (id) => {
     const response = await apiRequest("PATCH", `/user/update-cart/${id}`);
@@ -36,7 +36,6 @@ const Cart = () => {
   };
 
   const addToWishlistHandler = async (id) => {
-    console.log(id);
     try {
       const response = await apiRequest(
         "PATCH",
@@ -48,12 +47,50 @@ const Cart = () => {
     }
   };
 
+  const sizeSetHandler = async (item, currSize) => {
+    try {
+      await apiRequest("PATCH", `/user/update-cartItem-size/${item._id}`, {
+        currSize,
+      });
+      toast.success("Size updated Successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const quantityHandler = async(item, currQuantity,initialQuantity) => {
+    try {
+      await apiRequest("PATCH", `/user/update-cartItem-quantity/${item._id}`, {
+        currQuantity,initialQuantity
+      });
+      toast.success("Quantity updated Successfully");
+    }catch(error){
+      toast.error(error.response.data.message);
+    }
+    console.log(item);
+    console.log(currQuantity);
+
+  };
+
+  const makePayment=async()=>{
+      const stripe=await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
+      const response=await apiRequest("POST","/user/create-checkout-session",{cart});
+      const result=stripe.redirectToCheckout({
+        sessionId:response.data.id
+      })
+      toast.success("Your order is maded");
+      if(result.error){
+        toast.error(result.error);
+      }
+  }
+
   return (
     <div>
       <div className="text-center text-gray-700 font-bold">
         MY BAG -------- ADDRESS -------- PAYMENT
       </div>
-      {cart !== undefined && cart.totalItem !== 0 && isLog ? (
+      {cart !== "" && cart.totalItem !== 0 && isLog ? (
         <div className="flex flex-wrap justify-center p-5">
           <div>
             {items.map((item) => (
@@ -82,28 +119,38 @@ const Cart = () => {
                             Size:
                             <select
                               defaultValue={item.size}
-                              className="ml-1 bg-white border-none"
+                              className="ml-1 bg-white border-0 focus:outline-none"
+                              onChange={(e) =>
+                                sizeSetHandler(item, e.target.value)
+                              }
                             >
                               {shirtSize.map((size) => (
-                                <option
-                                  key={size}
-                                  value={size}
-                                  onChange={(e) =>
-                                    setSizeSelected(e.target.value)
-                                  }
-                                >
+                                <option key={size} value={size}>
                                   {size}
                                 </option>
                               ))}
                             </select>
                           </div>
                           <div className="border border-black rounded p-2 md:pr-5 sm:mt-0 mt-2">
-                            Qty: {item.quantity}
+                            Qty:{" "}
+                            <select
+                              defaultValue={item.quantity}
+                              className="ml-1 bg-white border-0 focus:outline-none"
+                              onChange={(e) =>
+                                quantityHandler(item, e.target.value,item.quantity)
+                              }
+                            >
+                              {quantity.map((quan) => (
+                                <option key={quan} value={quan}>
+                                  {quan}
+                                </option>
+                              ))}
+                            </select>
                           </div>
                         </div>
                       </div>
-                      <div className=" flex md:flex-col flex-nowrap flex-row font-bold md:mt-0 mt-2">
-                        <div className=" md:mr-0 mr-2">
+                      <div className="flex md:flex-col flex-nowrap flex-row font-bold md:mt-0 mt-2">
+                        <div className="md:mr-0 mr-2">
                           {item.product.discountPrice > 0 ? (
                             <div className="flex space-x-2 justify-end">
                               <div className="font-extrabold ">
@@ -153,6 +200,7 @@ const Cart = () => {
               </div>
             ))}
           </div>
+
           <div className="ml-4 w-96">
             <div className="w-full">
               <div className="p-2">BILLING DETAILS</div>
@@ -167,18 +215,26 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between border p-3">
                   <div>GST</div>
-                  <div>&#8377; {(cart.totalPrice -cart.totalDiscountPrice)* (18 / 100)}</div>
+                  <div>
+                    &#8377;{" "}
+                    {Math.round(
+                      (cart.totalPrice - cart.totalDiscountPrice) * (18 / 100)
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex justify-between border p-3">
                   <div>Total Amount</div>
                   <div>
-                    &#8377; {((cart.totalPrice -cart.totalDiscountPrice)) +( (cart.totalPrice -cart.totalDiscountPrice)* (18 / 100))}
+                    &#8377;{" "}
+                    {Math.round(cart.totalPrice -
+                      cart.totalDiscountPrice +
+                      (cart.totalPrice - cart.totalDiscountPrice) * (18 / 100))}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="hover:bg-green-700 cursor-pointer border mt-3 p-2 text-center font-bold text-white bg-green-800">
+            <div onClick={makePayment} className="hover:bg-green-700 cursor-pointer border mt-3 p-2 text-center font-bold text-white bg-green-800">
               PLACE ORDER
             </div>
           </div>

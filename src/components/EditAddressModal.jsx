@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
 
-const NewAddressModal = ({ isOpen, onClose, onConfirm, text}) => {
+const EditAddressModal = ({ isOpen, onClose, onConfirm, text,address}) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -18,6 +18,8 @@ const NewAddressModal = ({ isOpen, onClose, onConfirm, text}) => {
   });
 
   if (!isOpen) return null;
+
+  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -182,4 +184,4 @@ const NewAddressModal = ({ isOpen, onClose, onConfirm, text}) => {
   );
 };
 
-export default NewAddressModal;
+export default EditAddressModal;

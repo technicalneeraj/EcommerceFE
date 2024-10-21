@@ -16,6 +16,7 @@
     "@heroicons/react": "^2.1.5",
     "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.1",
+    "@stripe/stripe-js": "^4.8.0",
     "axios": "^1.7.7",
     "heroicons": "^2.1.5",
     "js-cookie": "^3.0.5",

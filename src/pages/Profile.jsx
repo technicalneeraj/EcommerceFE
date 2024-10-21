@@ -95,7 +95,7 @@ const Profile = () => {
                     className="cursor-pointer hover:text-blue-500"
                     onClick={() => navigate("/profile-address")}
                   >
-                    Edit
+                    Change/Edit
                   </div>
                 </div>
                 <div className="border p-2 rounded-xl capitalize">

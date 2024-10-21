@@ -12,6 +12,8 @@ const EditProduct = () => {
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState("");
+  const [sku,setSku]=useState("");
+  const [discountPrice,setDiscountPrice]=useState("");
   const [mainImage, setMainImage] = useState(null);
   const [existingMainImage, setExistingMainImage] = useState(""); // Store the existing main image URL
   const [otherImages, setOtherImages] = useState([]);
@@ -51,11 +53,13 @@ const EditProduct = () => {
         setBrand(product.brand);
         setCategory(cat.data.category.type);
         setStock(product.stock);
+        setSku(product.sku);
         setIsFeatured(product.isFeatured);
         setParentCategory(cat.data.category.parent[0]);
         setSubParentCategory(cat.data.category.parent[1]);
         setStatus(product.status);
         setTags(product.tags.join(", "));
+        setDiscountPrice(product.discountPrice);
         setExistingMainImage(product.mainImage);
         setAttributes(product.attributes);
         setExistingOtherImages(product.otherImages);
@@ -80,6 +84,8 @@ const EditProduct = () => {
     formData.append("stock", stock);
     formData.append("isFeatured", isFeatured);
     formData.append("status", status);
+    formData.append("discountPrice",discountPrice);
+    formData.append("sku",sku);
     formData.append(
       "tags",
       tags
@@ -144,14 +150,34 @@ const EditProduct = () => {
           required
           className="w-full p-2 border border-gray-300 rounded h-24"
         />
+        <div className="flex">
         <input
           type="number"
-          placeholder="Price of product*"
+          placeholder="Price*"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           required
-          className="w-full p-2 border border-gray-300 rounded"
+          className="w-full p-2 border mr-2 border-gray-300 rounded"
         />
+        <input
+          type="number"
+          placeholder="Discount Price*"
+          value={discountPrice}
+          onChange={(e) => setDiscountPrice(e.target.value)}
+          required
+          className="w-full p-2 mr-2 border border-gray-300 rounded"
+        />
+          <input
+            type="text"
+            placeholder="Sku*"
+            value={sku}
+            onChange={(e) => setSku(e.target.value)}
+            required
+            className="w-full mr-2 p-2 border border-gray-300 rounded"
+          />
+
+        </div>
+        
         <div className="flex">
           <input
             type="text"
