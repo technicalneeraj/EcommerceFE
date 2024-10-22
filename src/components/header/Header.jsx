@@ -1,21 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
 import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { useNavigate } from "react-router-dom";
-import "./Header.css";
-import { useContext } from "react";
-import Logout from "../Logout";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
 import { authContext } from "../../utility/AuthContext";
 import { useCategory } from "../../utility/CategoryContext";
 import { apiRequest } from "../../utility/Api";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+import Logout from "../Logout";
+import "./Header.css";
 
 const Header = () => {
+
   const { setCurrentCategory, currentCategory } = useCategory();
   const { isLog, userRole } = useContext(authContext);
+  const navigate = useNavigate();
+  
   const [isTopOpen, setIsTopOpen] = useState(false);
   const [isDownOpen, setIsDownOpen] = useState(false);
   const [profileOpen, setIsProfileOpen] = useState(false);
@@ -25,7 +30,7 @@ const Header = () => {
   const [searchHovered, setSearchHovered] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const navigate = useNavigate();
+  
 
   const handleCategoryClick = (category) => {
     setCurrentCategory(category);
@@ -278,9 +283,30 @@ const Header = () => {
                   onMouseLeave={() => setIsMoreOpen(false)}
                   onMouseEnter={() => setIsMoreOpen(true)}
                 >
-                  {userRole === "admin" && <div className="hover:text-red-600" onClick={()=>navigate("/add-product")}>Add Product</div>}
-                  {userRole === "admin" && <div className="hover:text-red-600" onClick={()=>navigate("/add-banner")}>Add Banner</div>}
-                  {userRole === "admin" && <div className="hover:text-red-600" onClick={()=>navigate("/add-category")}>Add Category</div>}
+                  {userRole === "admin" && (
+                    <div
+                      className="hover:text-red-600"
+                      onClick={() => navigate("/add-product")}
+                    >
+                      Add Product
+                    </div>
+                  )}
+                  {userRole === "admin" && (
+                    <div
+                      className="hover:text-red-600"
+                      onClick={() => navigate("/add-banner")}
+                    >
+                      Add Banner
+                    </div>
+                  )}
+                  {userRole === "admin" && (
+                    <div
+                      className="hover:text-red-600"
+                      onClick={() => navigate("/add-category")}
+                    >
+                      Add Category
+                    </div>
+                  )}
                 </div>
               )}
             </div>

@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-import { apiRequest } from "../utility/Api";
+import React, { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { authContext } from "../utility/AuthContext";
-import ConfirmationModal from "../components/ConfirmationModal";
-import LogOutModal from "../components/LogOutModal";
 
-const ProfileLeft = ({ firstname,lastname }) => {
-  const {userData, setIsLog, setUserData, setUserRole } = useContext(authContext);
+import { apiRequest } from "../utility/Api";
+import { authContext } from "../utility/AuthContext";
+import ConfirmationModal from "./modals/ConfirmationModal";
+import LogOutModal from "./modals/LogOutModal";
+
+const ProfileLeft = ({ firstname, lastname }) => {
+
+  const navigate = useNavigate();
+  const { userData, setIsLog, setUserData, setUserRole } = useContext(authContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
 
-  const navigate = useNavigate();
   const logOutHandler = async () => {
     try {
       await apiRequest("POST", "/um/logout");
@@ -25,6 +26,7 @@ const ProfileLeft = ({ firstname,lastname }) => {
       toast.error(error.response.message);
     }
   };
+
   const deleteAccountHandler = async () => {
     try {
       const response = await apiRequest(
@@ -41,6 +43,7 @@ const ProfileLeft = ({ firstname,lastname }) => {
       toast.error(error.response.data.message);
     }
   };
+
   return (
     <div className="flex flex-col mr-6 mt-2 space-y-3">
       <div className="border bg-gray-300 p-4">

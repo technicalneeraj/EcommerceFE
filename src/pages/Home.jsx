@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
-import Card from "../components/Card";
-import MainCarousel from "../components/HomeCarousel/MainCarousel";
+import { useLocation } from "react-router-dom";
+
+import { useCategory } from "../utility/CategoryContext";
 import { apiRequest } from "../utility/Api";
+import MainCarousel from "../components/homeCarousel/MainCarousel";
 import Product from "../components/Product";
 import CategoryCard from "../components/CategoryCard";
-import { useLocation, useParams } from "react-router-dom";
-import { useCategory } from "../utility/CategoryContext";
-import LoaderModal from "../components/LoderModal";
+import LoaderModal from "../components/modals/LoaderModal";
 
 const Home = () => {
-  const { setCurrentCategory, currentCategory } = useCategory();
+
   const location = useLocation();
+  const { setCurrentCategory, currentCategory } = useCategory();
   const [data, setData] = useState([]);
   const [isLoading,setIsLoading]=useState(false);
 
   useEffect(() => {
+
     const category = location.pathname.split('/').pop(); 
     setCurrentCategory(category);
     const fetchData = async () => {

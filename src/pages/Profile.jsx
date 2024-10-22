@@ -1,32 +1,36 @@
-import React, { useState } from "react";
-import { apiRequest } from "../utility/Api";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useContext } from "react";
+
+import { apiRequest } from "../utility/Api";
 import { authContext } from "../utility/AuthContext";
 import ProfileLeft from "../components/ProfileLeft";
 
 const Profile = () => {
+
   const navigate = useNavigate();
   const { userData } = useContext(authContext);
   const [firstname, setfirstname] = useState(userData.firstname);
   const [lastname, setlastname] = useState(userData.lastname);
   const [phone, setPhone] = useState(userData.phone);
+
   const [address, setAddress] = useState(() => {
     const defaultAddress = userData.address.find(
       (addr) => addr.isDefault === true
     );
     return defaultAddress || null;
   });
-  console.log(address);
+
   const savehandler = async (e) => {
     e.preventDefault();
+
     const data = {
       email: userData.email,
       firstname,
       lastname,
       phone,
     };
+    
     try {
       const response = await apiRequest(
         "POST",

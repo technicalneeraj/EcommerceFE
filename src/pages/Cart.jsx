@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { authContext } from "../utility/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
-import YesOrNoModal from "../components/YesOrNoModal";
 import { loadStripe } from "@stripe/stripe-js";
 
+import { authContext } from "../utility/AuthContext";
+import { apiRequest } from "../utility/Api";
+import YesOrNoModal from "../components/modals/YesOrNoModal";
+
 const Cart = () => {
+
   const navigate = useNavigate();
   const { isLog, userData } = useContext(authContext);
   const [cart, setCart] = useState("");
@@ -17,6 +19,7 @@ const Cart = () => {
   const shirtSize = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
   const [defaultAddress, setDefaultAddress] = useState({});
   const quantity = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
   useEffect(() => {
     if (isLog) {
       const fetchingCart = async () => {

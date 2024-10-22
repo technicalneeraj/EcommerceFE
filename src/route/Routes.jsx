@@ -1,36 +1,36 @@
-import Signup from "./pages/SignUp.jsx";
 import {
   Route,
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate
 } from "react-router-dom";
-import OtpPage from "./pages/OtpPage.jsx";
-import Home from "./pages/Home.jsx";
-import Layout from "./Layout.jsx";
-import SearchPage from "./pages/SearchPage.jsx";
-import Login from "./pages/Login.jsx";
-import HomeSign from "./pages/HomeSign.jsx";
-import Forgotpassword from "./pages/ForgotPassword.jsx";
-import UserData from "./pages/UserData.jsx";
-import AddProduct from "./pages/AddProduct.jsx";
-import ProductData from "./pages/ProductData.jsx";
-import { Navigate } from "react-router-dom";
-import Profile from "./pages/Profile.jsx";
-import CatgeoryAdd from "./pages/CatgeoryAdd.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import Wishlist from "./pages/Wishlist.jsx";
-import Cart from "./pages/Cart.jsx";
-import EditProduct from "./pages/EditProduct.jsx";
-import BannerUpload from "./pages/BannerUpload.jsx";
-import CategoryPage from "./pages/CategoryPage.jsx";
+
+import Signup from "../pages/Register.jsx";
+import Home from "../pages/Home.jsx";
+import Layout from "../Layout.jsx";
+import SearchPage from "../pages/Search.jsx";
+import Login from "../pages/Login.jsx";
+import AuthPage from "../pages/auth/AuthPage.jsx";
+import Forgotpassword from "../pages/ForgotPassword.jsx";
+import AddProduct from "../pages/admin/AddProduct.jsx";
+import ProductData from "../pages/ProductData.jsx";
+import Profile from "../pages/Profile.jsx";
+import CatgeoryAdd from "../pages/admin/AddCategory.jsx";
+import NotFound from "../pages/NotFound.jsx";
+import Wishlist from "../pages/Wishlist.jsx";
+import Cart from "../pages/Cart.jsx";
+import EditProduct from "../pages/admin/EditProduct.jsx";
+import BannerUpload from "../pages/admin/AddBanner.jsx";
+import CategoryPage from "../pages/Category.jsx";
 import PrivateRoutes from "./PrivateRoutes.jsx";
 import AdminRoutes from "./AdminRoutes.jsx";
-import Address from "./pages/Address.jsx";
+import Address from "../pages/Address.jsx";
 import PublicRoute from "./PublicRoutes.jsx";
-import MyOrders from "./pages/MyOrders.jsx";
+import MyOrders from "../pages/MyOrders.jsx";
 
 function Routes() {
+
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Layout />}>
@@ -39,7 +39,7 @@ function Routes() {
         <Route path="/women" element={<Home />} />
         <Route path="/kids" element={<Home />} />
         <Route element={<PublicRoute />}>
-          <Route path="/" element={<HomeSign />}>
+          <Route path="/" element={<AuthPage />}>
             <Route path="/register" element={<Signup />} />
             <Route path="/login" element={<Login />} />
           </Route>
@@ -55,10 +55,9 @@ function Routes() {
         <Route element={<PrivateRoutes />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile-address" element={<Address />} />
-          <Route path="/myOrders" element={<MyOrders/>}/>
+          <Route path="/myOrders" element={<MyOrders />} />
           <Route element={<AdminRoutes />}>
             <Route path="/edit-product/:id" element={<EditProduct />} />
-            <Route path="/userdata" element={<UserData />} />
             <Route path="/add-category" element={<CatgeoryAdd />} />
             <Route path="/add-banner" element={<BannerUpload />} />
             <Route path="/add-product" element={<AddProduct />} />

@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
-import { apiRequest } from "../utility/Api";
-import ItemCategoryCard from "../components/ItemCategoryCard";
-import { useCategory } from "../utility/CategoryContext";
-import { useContext } from "react";
-import { authContext } from "../utility/AuthContext";
 
-const SearchPage = () => {
+import { apiRequest } from "../utility/Api";
+import { useCategory } from "../utility/CategoryContext";
+import { authContext } from "../utility/AuthContext";
+import ItemCategoryCard from "../components/CategoryProductCard";
+
+const Search = () => {
+
   const location = useLocation();
   const { userData } = useContext(authContext);
-  const queryParams = new URLSearchParams(location.search);
   const q = queryParams.get("q");
+  const queryParams = new URLSearchParams(location.search);
   const [products, setProducts] = useState([]);
   const { currentCategory } = useCategory();
   const [similarProducts, setSimilarProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+
   useEffect(() => {
     fetchProducts();
   }, [q]);
@@ -102,4 +104,4 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+export default Search;

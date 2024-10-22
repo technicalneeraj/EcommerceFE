@@ -9,9 +9,10 @@ const WishlistToCartModal = ({
   selectedSize,
   setSelectedSize,
 }) => {
-  if (!isOpen) return null;
 
+  if (!isOpen) return null;
   const sizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+
   return (
     <div className="fixed flex justify-center items-center z-50  inset-0 bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded relative shadow-md">
@@ -33,7 +34,7 @@ const WishlistToCartModal = ({
             </div>
           </div>
         </div>
-        {/* <h2 className="mb-4">Are you sure you want to cart?</h2> */}
+        
         <div>
           <hr />
           <div className="font-bold mb-2">Please select a size.</div>

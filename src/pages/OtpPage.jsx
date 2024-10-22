@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate} from 'react-router-dom';
-import { apiRequest } from '../utility/Api';
 import { toast } from 'react-toastify';
 
+import { apiRequest } from '../utility/Api';
+
 const OtpPage = ({ email, firstname, lastname, phone, password }) => {
+    
     const navigate = useNavigate();
     const [otp,setOtp]=useState("");
     const [respmsg,setRespmsg]=useState("");

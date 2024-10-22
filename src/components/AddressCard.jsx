@@ -1,15 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import NewAddressModal from "./NewAddressModal";
-import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import EditAddressModal from "./EditAddressModal";
+
+import { apiRequest } from "../utility/Api";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import NewAddressModal from "./modals/NewAddressModal";
+import EditAddressModal from "./modals/EditAddressModal";
 
 const AddressCard = ({ address }) => {
+
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const removeAddressHandler = async () => {
     try {
       const response = await apiRequest("DELETE", `/address/${address._id}`);

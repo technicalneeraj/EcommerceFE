@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-const BannerUpload = () => {
+
+import { apiRequest } from "../../utility/Api";
+
+const AddBanner = () => {
+  
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const [status, setStatus] = useState("active");
@@ -97,4 +100,4 @@ const BannerUpload = () => {
   );
 };
 
-export default BannerUpload;
+export default AddBanner;

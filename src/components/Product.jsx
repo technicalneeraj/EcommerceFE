@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { apiRequest } from "../utility/Api";
 import { useNavigate } from "react-router-dom";
-import Card from "./Card";
+import Card from "./ProductCard";
 import { useCategory } from "../utility/CategoryContext";
 import { useContext } from "react";
 import { authContext } from "../utility/AuthContext";

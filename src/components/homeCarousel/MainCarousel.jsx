@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
-import { apiRequest } from "../../utility/Api";
-import { useCategory } from "../../utility/CategoryContext";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useRef } from "react";
+
+import { apiRequest } from "../../utility/Api";
+import { useCategory } from "../../utility/CategoryContext";
+
 const MainCarousel = () => {
+
   const { currentCategory } = useCategory();
-  const [data, setData] = useState([]);
   const carouselRef = useRef(null);
+  const [data, setData] = useState([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,17 +45,18 @@ const MainCarousel = () => {
   const goToPrev = () => {
     carouselRef.current.slidePrev();
   };
+  
   return (
     <>
       <div className="flex justify-center relative items-center">
-          <AliceCarousel
-            ref={carouselRef}
-            mouseTracking
-            items={items}
-            controlsStrategy="alternate"
-            disableButtonsControls
-            infinite
-          />
+        <AliceCarousel
+          ref={carouselRef}
+          mouseTracking
+          items={items}
+          controlsStrategy="alternate"
+          disableButtonsControls
+          infinite
+        />
         <div className="absolute top-1/2 left-4">
           <button onClick={goToPrev} className="rounded">
             <ArrowBackIosIcon />

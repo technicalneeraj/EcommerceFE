@@ -18,9 +18,9 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useNavigate } from "react-router-dom";
 import { authContext } from "../utility/AuthContext";
-import YesOrNoModal from "../components/YesOrNoModal";
+import YesOrNoModal from "../components/modals/YesOrNoModal";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import LoaderModal from "../components/LoderModal";
+import LoaderModal from "../components/modals/LoaderModal";
 
 const ProductData = () => {
   const { userRole, userData } = useContext(authContext);

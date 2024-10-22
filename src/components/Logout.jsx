@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { authContext } from '../utility/AuthContext';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import LogOutModal from './LogOutModal';
+import LogOutModal from './modals/LogOutModal';
 const Logout = () => {
     const navigate=useNavigate();
     const { setIsLog ,setUserRole,setUserData} =  useContext(authContext);

@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { apiRequest } from "../utility/Api";
-import ItemCategoryCard from "../components/ItemCategoryCard";
-import { authContext } from "../utility/AuthContext";
 
-const CategoryPage = () => {
+import { apiRequest } from "../utility/Api";
+import { authContext } from "../utility/AuthContext";
+import ItemCategoryCard from "../components/CategoryProductCard";
+
+
+const Category = () => {
+
   const { userData } = useContext(authContext);
   const { Pcategory, category } = useParams();
   const [bannerImage, setBannerImage] = useState("");
@@ -73,4 +76,4 @@ const CategoryPage = () => {
   );
 };
 
-export default CategoryPage;
+export default Category;

@@ -1,15 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { authContext } from "../utility/AuthContext";
 import { apiRequest } from "../utility/Api";
 import WishlistCard from "../components/WishlistCard";
 
 const Wishlist = () => {
+
   const navigate = useNavigate();
   const { isLog } = useContext(authContext);
   const [itemsCount, setItemsCount] = useState(0);
   const [wishListItems, setWishListItems] = useState([]);
+
   useEffect(() => {
+    
     if (isLog) {
       const productFetching = async () => {
         const response = await apiRequest("GET", "/user/wishlist-product");
@@ -19,6 +23,7 @@ const Wishlist = () => {
       productFetching();
     }
   }, [wishListItems]);
+
   return (
     <div>
       {itemsCount === 0 ? (
@@ -67,7 +72,6 @@ const Wishlist = () => {
                 />
               ))}
           </div>
-          {/* <div className="mb-9"></div> */}
         </div>
       )}
     </div>

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { apiRequest } from "../utility/Api";
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast} from 'react-toastify';
+
+import { apiRequest } from "../utility/Api";
 
 const Forgotpassword = () => {
+    
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [otpclicked, setOtpclicked] = useState(false);

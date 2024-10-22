@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { apiRequest } from "../utility/Api";
-import { useNavigate, useLocation } from "react-router-dom";
-import "./signup.css";
 import { toast } from "react-toastify";
-import OtpPage from "./OtpPage";
-import LoaderModal from "../components/LoderModal";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const Signup = () => {
+import { apiRequest } from "../utility/Api";
+import OtpPage from "./OtpPage";
+import LoaderModal from "../components/modals/LoaderModal";
+
+const Register = () => {
+
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOtpPage, setIsOtpPage] = useState(false);
-  const [isLoding,setIsLoading]=useState(false);
+  const [isLoding, setIsLoading] = useState(false);
 
   useEffect(() => {
     const { firstname, lastname, email, phone, password } =
@@ -65,8 +66,7 @@ const Signup = () => {
 
   return (
     <>
-    
-    <LoaderModal isOpen={isLoding} text={"Wait for few seconds..."}/>
+      <LoaderModal isOpen={isLoding} text={"Wait for few seconds..."} />
       {isOtpPage ? (
         <OtpPage
           email={email}
@@ -146,4 +146,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Register;

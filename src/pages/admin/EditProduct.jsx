@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { apiRequest } from "../utility/Api";
+import { apiRequest } from "../../utility/Api";
 import { toast } from "react-toastify";
-import LoaderModal from "../components/LoderModal";
-import CategoryDropdowns from "../components/CatgeoryDropdowns";
+
+import LoaderModal from "../../components/modals/LoaderModal";
+import CategoryDropdowns from "../../components/CatgeoryDropdown";
 
 const EditProduct = () => {
+  
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");

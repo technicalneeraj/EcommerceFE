@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { apiRequest } from "../utility/Api";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { apiRequest } from "../utility/Api";
 
-const CategoryDropdowns = ({
+const CategoryDropdown = ({
   setCategory,
   setParentCategory,
   setSubParentCategory,
   category,
 }) => {
+
   const [categories, setCategories] = useState([]);
   const [selectedSuperParent, setSelectedSuperParent] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
@@ -109,4 +110,4 @@ const CategoryDropdowns = ({
   );
 };
 
-export default CategoryDropdowns;
+export default CategoryDropdown;

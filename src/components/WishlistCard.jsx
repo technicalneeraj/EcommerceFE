@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import WishlistToCartModal from "./WishlistToCartModal";
 
-const WishlistCard = ({ item, setWishListItems }) => {
+import { apiRequest } from "../utility/Api";
+import CloseIcon from "@mui/icons-material/Close";
+import WishlistToCartModal from "./modals/WishlistToCartModal";
+
+const WishlistCard = ({ item }) => {
+
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
-  const navigate = useNavigate();
+
   const deleteitemhandler = async (id) => {
     try {
       const response = await apiRequest(
@@ -23,6 +26,7 @@ const WishlistCard = ({ item, setWishListItems }) => {
       toast.error(error.response.data.message);
     }
   };
+
   const addToCart = async () => {
     const data = {
       size: selectedSize,
@@ -36,6 +40,7 @@ const WishlistCard = ({ item, setWishListItems }) => {
     await apiRequest("DELETE", `/user/remove-from-wishlist/${item._id}`);
     toast.success(response.data.message);
   };
+
   return (
     <>
       <div className="cursor-pointer flex flex-col bg-white shadow-lg rounded-lg mx-3 w-[23rem] h-[36rem]">
@@ -67,8 +72,12 @@ const WishlistCard = ({ item, setWishListItems }) => {
         <hr />
         <div>
           {item.discountPrice > 0 ? (
-            <div className="p-3 font-bold">&#8377; {item.price - item.discountPrice} 
-            <span className="line-through text-gray-400 ml-1"> &#8377; {item.price}</span>
+            <div className="p-3 font-bold">
+              &#8377; {item.price - item.discountPrice}
+              <span className="line-through text-gray-400 ml-1">
+                {" "}
+                &#8377; {item.price}
+              </span>
             </div>
           ) : (
             <div className="p-3 font-bold">&#8377; {item.price}</div>

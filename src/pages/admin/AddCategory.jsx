@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import { toast } from 'react-toastify';
-import { apiRequest } from '../utility/Api';
-import { useRef } from 'react';
+
+import { apiRequest } from '../../utility/Api';
 
 const CategoryAdd = () => {
+
   const [categoryName, setCategoryName] = useState('');
   const [parentCategories, setParentCategories] = useState('');
   const [image, setImage] = useState(null);
@@ -43,6 +44,7 @@ const CategoryAdd = () => {
   };
 
   return (
+
     <div className="max-w-md mx-auto p-4 bg-white rounded shadow-md">
       <h1 className="text-xl font-bold mb-4">Add Category</h1>
       <form onSubmit={handleSubmit} className="space-y-4">

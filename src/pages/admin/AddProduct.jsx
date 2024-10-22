@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-
-import CategoryDropdowns from "../components/CatgeoryDropdowns";
-import { apiRequest } from "../utility/Api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import LoaderModal from "../components/LoderModal";
+
+import CategoryDropdowns from "../../components/CatgeoryDropdown";
+import { apiRequest } from "../../utility/Api";
+import LoaderModal from "../../components/modals/LoaderModal";
 
 const AddProduct = () => {
+  
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -22,7 +23,7 @@ const AddProduct = () => {
   const [status, setStatus] = useState("active");
   const [tags, setTags] = useState("");
   const [loading, setLoading] = useState(false);
-  const [discountedPrice,setDiscountedPrice]=useState("");
+  const [discountedPrice, setDiscountedPrice] = useState("");
   const [attributes, setAttributes] = useState([{ name: "", value: "" }]);
   const navigate = useNavigate();
 
@@ -50,7 +51,7 @@ const AddProduct = () => {
     formData.append("isFeatured", isFeatured);
     formData.append("status", status);
     formData.append("sku", sku);
-    formData.append("discountPrice",discountedPrice);
+    formData.append("discountPrice", discountedPrice);
     formData.append(
       "tags",
       tags
@@ -116,7 +117,7 @@ const AddProduct = () => {
             required
             className="w-full p-2  mr-2 border border-gray-300 rounded"
           />
-           <input
+          <input
             type="number"
             placeholder="Discounted Price"
             value={discountedPrice}

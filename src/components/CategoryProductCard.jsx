@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import { apiRequest } from "../utility/Api";
 import { toast } from "react-toastify";
-import { useContext } from "react";
+
+import { apiRequest } from "../utility/Api";
 import { authContext } from "../utility/AuthContext";
 
-const ItemCategoryCard = ({ product, isFavoriteInDb }) => {
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+
+const CategoryProductCard = ({ product, isFavoriteInDb }) => {
+
+  const navigate = useNavigate();
   const { isLog } = useContext(authContext);
   const [isFavorited, setIsFavorited] = useState(false);
-  const navigate = useNavigate();
 
   const handleHeartClicked = async (ID) => {
     if (!isLog) {
@@ -75,4 +77,4 @@ const ItemCategoryCard = ({ product, isFavoriteInDb }) => {
   );
 };
 
-export default ItemCategoryCard;
+export default CategoryProductCard;
