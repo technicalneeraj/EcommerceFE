@@ -27,6 +27,7 @@ import PrivateRoutes from "./PrivateRoutes.jsx";
 import AdminRoutes from "./AdminRoutes.jsx";
 import Address from "../pages/Address.jsx";
 import PublicRoute from "./PublicRoutes.jsx";
+import VerifyOrder from "../pages/VerifyOrder.jsx";
 import MyOrders from "../pages/MyOrders.jsx";
 
 function Routes() {
@@ -55,7 +56,8 @@ function Routes() {
         <Route element={<PrivateRoutes />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile-address" element={<Address />} />
-          <Route path="/myOrders" element={<MyOrders />} />
+          <Route path="/verify" element={<VerifyOrder />} />
+          <Route path="/myOrders" element={<MyOrders/>}/>
           <Route element={<AdminRoutes />}>
             <Route path="/edit-product/:id" element={<EditProduct />} />
             <Route path="/add-category" element={<CatgeoryAdd />} />

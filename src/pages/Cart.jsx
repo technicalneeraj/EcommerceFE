@@ -10,7 +10,6 @@ import YesOrNoModal from "../components/modals/YesOrNoModal";
 import LoaderModal from "../components/modals/LoaderModal";
 
 const Cart = () => {
-
   const navigate = useNavigate();
   const { getCount } = useCartWishlist();
   const { isLog, userData } = useContext(authContext);
@@ -20,10 +19,12 @@ const Cart = () => {
   const [itemToRemove, setItemToRemove] = useState(null);
   const [removeOrWishlist, setRemoveOrWishlist] = useState(null);
   const shirtSize = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+  const jeansSize = ["28", "30", "32", "34", "36"];
+
   const [defaultAddress, setDefaultAddress] = useState({});
   const quantity = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const [isLoading, setIsLoading] = useState(false);
- 
+
   useEffect(() => {
     if (isLog) {
       setIsLoading(true);
@@ -33,11 +34,12 @@ const Cart = () => {
         setItems(response.data.cart.cartItems);
       };
       fetchingCart();
-      setDefaultAddress(userData.address.find((addr) => addr.isDefault === true));
+      setDefaultAddress(
+        userData.address.find((addr) => addr.isDefault === true)
+      );
       setIsLoading(false);
     }
   }, [isLog, cart, items, userData]);
-
 
   const removeItemHandler = async (id) => {
     try {
@@ -102,18 +104,26 @@ const Cart = () => {
   const makePayment = async () => {
     setIsLoading(true);
     const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-
-    const response = await apiRequest("POST", "/user/create-checkout-session", {
-      cart,
-    });
-    setIsLoading(false);
-    const result = stripe.redirectToCheckout({
-      sessionId: response.data.id,
-    });
-    toast.success("Your order is maded");
-    if (result.error) {
+    try {
+      const response = await apiRequest(
+        "POST",
+        "/user/create-checkout-session",
+        {
+          cart,
+        }
+      );
+      const result = stripe.redirectToCheckout({
+        sessionId: response.data.id,
+      });
+      if (result.error) {
+        setIsLoading(false);
+        toast.error(result.error);
+        return;
+      }
       setIsLoading(false);
-      toast.error(result.error);
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -173,42 +183,58 @@ const Cart = () => {
                           {item.product.category.type}
                         </div>
                         <div className="flex flex-wrap font-bold mt-4">
-                          <div className="border border-black mr-2 rounded p-2 pr-5">
-                            Size:
-                            <select
-                              defaultValue={item.size}
-                              className="ml-1 bg-white border-0 focus:outline-none"
-                              onChange={(e) =>
-                                sizeSetHandler(item, e.target.value)
-                              }
-                            >
-                              {shirtSize.map((size) => (
-                                <option key={size} value={size}>
-                                  {size}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="border border-black rounded p-2 md:pr-5 sm:mt-0 mt-2">
-                            Qty:{" "}
-                            <select
-                              defaultValue={item.quantity}
-                              className="ml-1 bg-white border-0 focus:outline-none"
-                              onChange={(e) =>
-                                quantityHandler(
-                                  item,
-                                  e.target.value,
-                                  item.quantity
-                                )
-                              }
-                            >
-                              {quantity.map((quan) => (
-                                <option key={quan} value={quan}>
-                                  {quan}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+                          {item.product.stock > 0 ? (
+                            <>
+                              <div className="border border-black mr-2 rounded p-2 pr-5">
+                                Size:
+                                <select
+                                  defaultValue={item.size}
+                                  className="ml-1 bg-white border-0 focus:outline-none"
+                                  onChange={(e) =>
+                                    sizeSetHandler(item, e.target.value)
+                                  }
+                                >
+                                  {item.product.category.parent.includes(
+                                    "upper"
+                                  )
+                                    ? shirtSize.map((size) => (
+                                        <option key={size} value={size}>
+                                          {size}
+                                        </option>
+                                      ))
+                                    : jeansSize.map((size) => (
+                                        <option key={size} value={size}>
+                                          {size}
+                                        </option>
+                                      ))}
+                                </select>
+                              </div>
+                              <div className="border border-black rounded p-2 md:pr-5 sm:mt-0 mt-2">
+                                Qty:{" "}
+                                <select
+                                  defaultValue={item.quantity}
+                                  className="ml-1 bg-white border-0 focus:outline-none"
+                                  onChange={(e) =>
+                                    quantityHandler(
+                                      item,
+                                      e.target.value,
+                                      item.quantity
+                                    )
+                                  }
+                                >
+                                  {quantity.map((quan) => (
+                                    <option key={quan} value={quan}>
+                                      {quan}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="text-red-700">
+                              Currently out of stock!!
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="flex md:flex-col flex-nowrap flex-row font-bold md:mt-0 mt-2">

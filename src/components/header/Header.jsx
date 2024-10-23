@@ -264,6 +264,14 @@ const Header = () => {
                     Profile
                   </div>
                 )}
+                {isLog && (
+                  <div
+                    onClick={() => navigate("/myOrders")}
+                    className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                  >
+                    My Orders
+                  </div>
+                )}
               </div>
             )}
           </div>

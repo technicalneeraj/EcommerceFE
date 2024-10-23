@@ -45,20 +45,16 @@ const EditProduct = () => {
       try {
         const response = await apiRequest("GET", `/product/${id}`);
         const product = response.data.product;
-        const cat = await apiRequest(
-          "GET",
-          `/product/category/${product.category}`
-        );
         setName(product.name);
         setDescription(product.description);
         setPrice(product.price);
         setBrand(product.brand);
-        setCategory(cat.data.category.type);
+        setCategory(product.category.type);
         setStock(product.stock);
         setSku(product.sku);
         setIsFeatured(product.isFeatured);
-        setParentCategory(cat.data.category.parent[0]);
-        setSubParentCategory(cat.data.category.parent[1]);
+        setParentCategory(product.category.parent[0]);
+        setSubParentCategory(product.category.parent[1]);
         setStatus(product.status);
         setTags(product.tags.join(", "));
         setDiscountPrice(product.discountPrice);
@@ -183,10 +179,9 @@ const EditProduct = () => {
         <div className="flex">
           <input
             type="text"
-            placeholder="Brand of product*"
+            placeholder="Brand"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
-            required
             className="w-full mr-2 p-2 border border-gray-300 rounded"
           />
           <input

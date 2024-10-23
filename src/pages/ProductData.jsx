@@ -33,12 +33,16 @@ const ProductData = () => {
   const [quantity, setQuantity] = useState(1);
   const [tags, setTags] = useState([]);
   const [selectedSize, setSelectedSize] = useState(null);
-  const sizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+  const shirtSizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
+  const jeansSizes=["28","30","32","34","36"];
   const [descriptionClick, setDescriptionClick] = useState(false);
   const [isSizeSelected, setIsSizeSelected] = useState(true);
   const [isAlreadyInCart, setIsAlreadyInCart] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isUpper,setIsUpper]=useState(true);
+  const [inStock,setInStock]=useState(true);
+  const [stock,setStock]=useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,14 +50,10 @@ const ProductData = () => {
       try {
         const response = await apiRequest("GET", `/product/${id}`);
         setData(response.data.product);
-
-        if (response.data.product.category) {
-          const catResponse = await apiRequest(
-            "GET",
-            `/product/category/${response.data.product.category}`
-          );
-          setCategory(catResponse.data.category.type);
-        }
+        setCategory(response.data.product.category.type);
+        setIsUpper(response.data.product.category.parent.includes("upper"));
+        setInStock(response.data.product.stock>0);
+        setStock(response.data.product.stock);
 
         if (
           response.data.product.tags &&
@@ -76,7 +76,6 @@ const ProductData = () => {
     fetchData();
     checkInWishlist();
   }, [id]);
-
   const checkInWishlist = async () => {
     setLoading(true);
     if (userData) {
@@ -220,16 +219,30 @@ const ProductData = () => {
         </div>
         <div className="font-bold">Please select a size.</div>
         <div className="flex space-x-3 flex-wrap md:flex-nowrap">
-          {sizes.map((size) => (
-            <div
-              key={size}
-              className={`border-2 rounded-3xl pr-3 pl-3 pt-2 pb-2 cursor-pointer 
-                ${selectedSize === size ? "border-black" : "border-gray-400"}`}
-              onClick={() => sizeClickHandler(size)}
-            >
-              {size}
-            </div>
-          ))}
+          {
+            isUpper ?(shirtSizes.map((size) => (
+              <div
+                key={size}
+                className={`border-2 rounded-3xl pr-3 pl-3 pt-2 pb-2 cursor-pointer 
+                  ${selectedSize === size ? "border-black" : "border-gray-400"}`}
+                onClick={() => sizeClickHandler(size)}
+              >
+                {size}
+              </div>
+            ))):(
+              jeansSizes.map((size) => (
+                <div
+                  key={size}
+                  className={`border-2 rounded-3xl pr-3 pl-3 pt-2 pb-2 cursor-pointer 
+                    ${selectedSize === size ? "border-black" : "border-gray-400"}`}
+                  onClick={() => sizeClickHandler(size)}
+                >
+                  {size}
+                </div>
+              ))
+            )
+          }
+         
         </div>
         {!isSizeSelected && (
           <div className="border bg-red-400 p-3">Please select a size.</div>
@@ -251,17 +264,18 @@ const ProductData = () => {
             ))}
           </select>
         </div>
-        <div className="mt-5 flex flex-wrap">
+        <div className="mt-5 flex">
           {!isAlreadyInCart ? (
             <button
-              className={"bg-red-700 text-white py-2 px-12 mr-2"}
+            className={`py-2 px-5 mr-2 ${inStock ? 'bg-red-700 text-white' : 'bg-gray-400 text-gray-200 cursor-not-allowed font-bold'}`}
               onClick={addToCartHandler}
+              disabled={!inStock}
             >
               ADD TO CART
             </button>
           ) : (
             <button
-              className={"bg-green-700 text-white py-2 px-12 mr-2"}
+              className={"bg-green-700 text-white py-2 px-5 mr-2"}
               onClick={() => navigate("/cart")}
             >
               GO TO CART
@@ -269,20 +283,23 @@ const ProductData = () => {
           )}
           {!isWishlisted ? (
             <button
-              className={"border border-red-500 py-2 px-7 mt-2 lg:mt-0"}
+              className={"border border-red-500 py-2 px-5 mt-2 lg:mt-0"}
               onClick={wishlistHandler}
             >
               <FavoriteBorderIcon /> ADD TO WISHLIST
             </button>
           ) : (
             <button
-              className={"border border-red-500 py-2 px-7 mt-2 lg:mt-0"}
+              className={"border border-red-500 py-2 px-5 mt-2 lg:mt-0"}
               onClick={wishlistHandler}
             >
               <FavoriteIcon /> ADDED TO WISHLIST
             </button>
           )}
         </div>
+        {
+          !inStock && <div className="text-red-700">Currently Out of Stock!!</div>
+        }
         <div className="mt-3 flex space-x-2">
           <div>Share</div>
           <FacebookShareButton url={productUrl} quote={data.description}>
