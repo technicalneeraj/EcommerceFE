@@ -1,15 +1,17 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext,useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { apiRequest } from './Api';
 
 export const authContext = createContext();
 
 export default function UserAuthContext({ children }) {
+
     const token = Cookies.get('accessToken');
     const [isLog, setIsLog] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState(null);
     const [userRole,setUserRole]=useState("");
+
     const verifyToken = async () => {
         try {
             setIsLoading(true);
@@ -30,7 +32,9 @@ export default function UserAuthContext({ children }) {
                 setUserData(null);
                 setUserRole("");
             }
+
         } catch (error) {
+
             console.error('Token verification failed:', error);
             setIsLog(false);
             setIsLoading(false);
@@ -38,6 +42,7 @@ export default function UserAuthContext({ children }) {
             setUserRole("");
         }
     };
+
     useEffect(() => {
         if (token) {
             verifyToken();
@@ -46,6 +51,7 @@ export default function UserAuthContext({ children }) {
             setIsLoading(false);
         }
     }, []);
+
     return (
         <authContext.Provider value={{ isLog, isLoading, userData, setIsLog, setUserData ,setUserRole,userRole}}>
             {children}

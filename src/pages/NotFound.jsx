@@ -1,20 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const NotFound = () => {
-    const navigate = useNavigate();
-
-    const handleRedirect = () => {
-        navigate('/');
-    };
 
     return (
         <div style={styles.container}>
-            <h1 style={styles.header}>404 Not Found</h1>
-            <p style={styles.message}>Sorry, the page you are looking for does not exist.</p>
-            <button style={styles.button} onClick={handleRedirect}>
-                Back to Home
-            </button>
+            <img  className="h-[10rem]" src='https://tss-static-images.gumlet.io/notfound.png'></img>
+            <p className="text-2xl text-gray-400" style={styles.message}>We can't seem to find the page you are looking for</p>
         </div>
     );
 };

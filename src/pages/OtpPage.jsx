@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom';
-import { apiRequest } from '../utility/Api';
+import { useNavigate} from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-const OtpPage = () => {
-    const location = useLocation();
+import { apiRequest } from '../utility/Api';
+
+const OtpPage = ({ email, firstname, lastname, phone, password }) => {
+    
     const navigate = useNavigate();
-    const { email, firstname, lastname, phone,password } = location.state || {};  
     const [otp,setOtp]=useState("");
     const [respmsg,setRespmsg]=useState("");
 
@@ -40,6 +40,7 @@ const OtpPage = () => {
     }
 
     const handleEditClick = async () => {
+        console.log(email);
         try {
             const response = await apiRequest("DELETE","/delete-data-for-edit", {
                 data: { email }
@@ -62,7 +63,7 @@ const OtpPage = () => {
    <div className='mt-5 mb-5 text-center'>
    <form onSubmit={submithandler} className='text-center'>
     <label htmlFor="otp">Enter the otp you recieved on <span className='text-sky-400'><b>{email}</b></span></label>
-    <span onClick={handleEditClick} className='bg-blue-400 text-orange-50 ml-3 p-1 cursor-pointer'>Edit</span>
+    {/* <span onClick={handleEditClick} className='bg-blue-400 text-orange-50 ml-3 p-1 cursor-pointer'>Edit</span> */}
     <br/>
     <input type='text' id='otp' value={otp} onChange={(e)=>setOtp(e.target.value)} className='py-3 px-3 mt-5' placeholder="Enter otp..."></input>
     <button type='submit' className='bg-blue-400 text-white py-3 ml-2 px-3'>Verify</button>

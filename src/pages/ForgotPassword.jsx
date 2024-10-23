@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { apiRequest } from "../utility/Api";
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast} from 'react-toastify';
+
+import { apiRequest } from "../utility/Api";
 
 const Forgotpassword = () => {
+    
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [otpclicked, setOtpclicked] = useState(false);
@@ -43,17 +45,25 @@ const Forgotpassword = () => {
 
     const Otpclicked = (e) => {
         e.preventDefault(); 
+        if(email===""){
+            toast.error("Please enter an email");
+        }
+        else{
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (email !== "" && emailPattern.test(email)) {
             forgothandler(e);
         } else {
-            alert("Please enter a valid email address.");
+           toast.error("Please enter an valid email");
         }
+    }
     }
 
     const newpasswordchange=async(e)=>{
         e.preventDefault();
+        if(newpassword.length<6){
+           return toast.error("Password must be at least 6 characters long.");
+        }
         try{
             const response = await apiRequest('PATCH', '/change-password', { email, newpassword });
             if(response.status==200){
