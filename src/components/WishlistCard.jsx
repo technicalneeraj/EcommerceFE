@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
+import { useCartWishlist } from "../utility/CartWishlistContext";
 import { apiRequest } from "../utility/Api";
 import CloseIcon from "@mui/icons-material/Close";
 import WishlistToCartModal from "./modals/WishlistToCartModal";
 
 const WishlistCard = ({ item }) => {
-
   const navigate = useNavigate();
+  const { getCount } = useCartWishlist();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
@@ -20,6 +21,7 @@ const WishlistCard = ({ item }) => {
         `/user/updating-user-wishlist/${id}`
       );
       if (response.status == 200) {
+        await getCount();
         toast.success(response.data.message);
       }
     } catch (error) {
@@ -28,22 +30,27 @@ const WishlistCard = ({ item }) => {
   };
 
   const addToCart = async () => {
-    const data = {
-      size: selectedSize,
-      quantity: 1,
-    };
-    const response = await apiRequest(
-      "POST",
-      `/user/add-to-cart/${item._id}`,
-      data
-    );
-    await apiRequest("DELETE", `/user/remove-from-wishlist/${item._id}`);
-    toast.success(response.data.message);
+    try {
+      const data = {
+        size: selectedSize,
+        quantity: 1,
+      };
+      const response = await apiRequest(
+        "POST",
+        `/user/add-to-cart/${item._id}`,
+        data
+      );
+      await apiRequest("DELETE", `/user/remove-from-wishlist/${item._id}`);
+      await getCount();
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
     <>
-      <div className="cursor-pointer flex flex-col bg-white shadow-lg rounded-lg mx-3 w-[23rem] h-[36rem]">
+      <div className="cursor-pointer flex flex-col bg-white shadow-lg rounded-lg mx-3 w-[23rem] h-[36rem] mb-5">
         <div className="relative overflow-hidden">
           <div
             className="h-[36rem] w-[23rem]"

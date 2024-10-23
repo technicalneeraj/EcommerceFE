@@ -6,12 +6,13 @@ import { apiRequest } from "../utility/Api";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NewAddressModal from "./modals/NewAddressModal";
 import EditAddressModal from "./modals/EditAddressModal";
+import ConfirmationModal from "./modals/ConfirmationModal";
 
 const AddressCard = ({ address }) => {
-
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [removeModal, setRemoveModal] = useState(false);
 
   const removeAddressHandler = async () => {
     try {
@@ -49,7 +50,7 @@ const AddressCard = ({ address }) => {
               </div>
               <div
                 className="font-bold text-sm cursor-pointer border bg-white p-1 rounded-xl"
-                onClick={removeAddressHandler}
+                onClick={() => setRemoveModal(true)}
               >
                 REMOVE
               </div>
@@ -92,6 +93,15 @@ const AddressCard = ({ address }) => {
         }}
         text={"Edit Address"}
         address={address}
+      />
+      <ConfirmationModal
+        isOpen={removeModal}
+        onClose={() => setRemoveModal(false)}
+        onConfirm={() => {
+          removeAddressHandler();
+          setRemoveModal(false);
+        }}
+        text={"Are you sure you want to delete this address?"}
       />
     </>
   );

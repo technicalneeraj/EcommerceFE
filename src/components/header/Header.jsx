@@ -7,20 +7,22 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import LoaderModal from "../modals/LoaderModal";
 
 import { authContext } from "../../utility/AuthContext";
 import { useCategory } from "../../utility/CategoryContext";
 import { apiRequest } from "../../utility/Api";
+import { useCartWishlist } from "../../utility/CartWishlistContext";
 
 import Logout from "../Logout";
 import "./Header.css";
 
 const Header = () => {
-
   const { setCurrentCategory, currentCategory } = useCategory();
   const { isLog, userRole } = useContext(authContext);
+  const { totalItemInCart, totalItemInWishlist, isLoading } = useCartWishlist();
   const navigate = useNavigate();
-  
+
   const [isTopOpen, setIsTopOpen] = useState(false);
   const [isDownOpen, setIsDownOpen] = useState(false);
   const [profileOpen, setIsProfileOpen] = useState(false);
@@ -30,7 +32,6 @@ const Header = () => {
   const [searchHovered, setSearchHovered] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isMoreOpen, setIsMoreOpen] = useState(false);
-  
 
   const handleCategoryClick = (category) => {
     setCurrentCategory(category);
@@ -69,6 +70,7 @@ const Header = () => {
 
   return (
     <>
+      <LoaderModal isOpen={isLoading} text={"Wait for a while"} />
       <div className="w-full h-12 bg-red-600">
         <div className="flex text-white justify-center md:w-1/2 w-full">
           <div
@@ -131,10 +133,11 @@ const Header = () => {
             </div>
           </div>
 
-          <div className="p-1">
+          <div className="p-1 flex flex-col hide-on-small">
             <div
-              className="cursor-pointer hover:text-red-600 hide-on-small"
+              className="cursor-pointer hover:text-red-600 h-full hide-on-small"
               onMouseEnter={() => setIsDownOpen(true)}
+              onMouseLeave={() => setIsDownOpen(false)}
             >
               Downwear{" "}
               <span>
@@ -143,22 +146,20 @@ const Header = () => {
             </div>
             {isDownOpen && (
               <div
-                className="absolute z-50 bg-white border border-gray-300 shadow-md mt-1"
+                className="absolute z-50 bg-white border border-gray-300 shadow-md mt-6 w-24 text-center"
                 onMouseEnter={() => setIsDownOpen(true)}
                 onMouseLeave={() => setIsDownOpen(false)}
               >
-                {downCategory.map((value) => {
-                  return (
-                    <div
-                      onClick={() => navigate(`/${currentCategory}/${value}`)}
-                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
-                      key={value}
-                    >
-                      {value.charAt(0).toUpperCase() +
-                        value.slice(1).toLowerCase()}
-                    </div>
-                  );
-                })}
+                {downCategory.map((value) => (
+                  <div
+                    onClick={() => navigate(`/${currentCategory}/${value}`)}
+                    className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                    key={value}
+                  >
+                    {value.charAt(0).toUpperCase() +
+                      value.slice(1).toLowerCase()}
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -229,13 +230,14 @@ const Header = () => {
             </div>
           </div>
           <div
-            className="cursor-pointer hover:text-red-600 relative"
+            className="cursor-pointer hover:text-red-600 flex flex-col relative"
             onMouseEnter={() => setIsProfileOpen(true)}
+            onMouseLeave={() => setIsProfileOpen(false)}
           >
             <PersonIcon />
             {profileOpen && (
               <div
-                className="absolute z-50 bg-white border border-gray-300 shadow-md mt-1"
+                className="absolute z-50 bg-white border border-gray-300 shadow-md mt-6 w-24 text-center"
                 onMouseEnter={() => setIsProfileOpen(true)}
                 onMouseLeave={() => setIsProfileOpen(false)}
               >
@@ -266,14 +268,29 @@ const Header = () => {
             )}
           </div>
           <div
-            className="cursor-pointer"
+            className="cursor-pointer relative"
             onClick={() => navigate("/mywishlist")}
           >
             <FavoriteBorderIcon />
+            {isLog && totalItemInWishlist > 0 && (
+              <div className="absolute -top-2 -right-2 bg-red-600  text-white tex-xs flex items-center justify-center w-5 h-5 rounded-full">
+                {totalItemInWishlist}
+              </div>
+            )}
           </div>
-          <div className="cursor-pointer" onClick={() => navigate("/cart")}>
+
+          <div
+            className="cursor-pointer relative"
+            onClick={() => navigate("/cart")}
+          >
             <LocalMallIcon />
+            {isLog && totalItemInCart > 0 && (
+              <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs flex items-center justify-center w-5 h-5 rounded-full">
+                {totalItemInCart}
+              </div>
+            )}
           </div>
+
           <div className="md:hidden" onMouseEnter={() => setIsMoreOpen(true)}>
             <div className="relative">
               <MoreVertIcon />

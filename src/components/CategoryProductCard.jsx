@@ -2,17 +2,21 @@ import React, { useState,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { useCartWishlist } from "../utility/CartWishlistContext";
 import { apiRequest } from "../utility/Api";
 import { authContext } from "../utility/AuthContext";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import LoaderModal from "./modals/LoaderModal";
 
 const CategoryProductCard = ({ product, isFavoriteInDb }) => {
 
   const navigate = useNavigate();
   const { isLog } = useContext(authContext);
+  const {getCount}=useCartWishlist();
   const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoading,setIsLoading]=useState(false);
 
   const handleHeartClicked = async (ID) => {
     if (!isLog) {
@@ -20,20 +24,25 @@ const CategoryProductCard = ({ product, isFavoriteInDb }) => {
       navigate("/login");
       return;
     }
+    setIsLoading(true);
     setIsFavorited(!isFavorited);
     try {
       const response = await apiRequest(
         "PATCH",
         `/user/updating-user-wishlist/${ID}`
       );
+      await getCount();
+      setIsLoading(false);
       toast.success(response.data.message);
     } catch (error) {
+      setIsLoading(false);
       toast.error(error.response.data.message);
     }
   };
 
   return (
     <>
+    <LoaderModal isOpen={isLoading} text={"Wait for a second"}/>
       <div className="relative cursor-pointer flex flex-col  bg-white  overflow-hidden mx-3 h-[30rem] w-[18rem]  mb-5 mt-4">
         <div className="h-[25rem] w-[18rem]">
           <img

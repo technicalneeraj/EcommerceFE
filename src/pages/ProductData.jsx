@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { apiRequest } from "../utility/Api";
-import InstagramIcon from "@mui/icons-material/Instagram";
-// import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-// import FacebookIcon from "@mui/icons-material/Facebook";
-import XIcon from "@mui/icons-material/X";
+import { toast } from "react-toastify";
+import { useCartWishlist } from "../utility/CartWishlistContext";
+
 import {
   FacebookShareButton,
   WhatsappShareButton,
@@ -13,16 +12,17 @@ import {
   TwitterShareButton,
   TwitterIcon,
 } from "react-share";
-import { toast } from "react-toastify";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
 import { useNavigate } from "react-router-dom";
 import { authContext } from "../utility/AuthContext";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import YesOrNoModal from "../components/modals/YesOrNoModal";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import LoaderModal from "../components/modals/LoaderModal";
 
 const ProductData = () => {
+  const { getCount } = useCartWishlist();
   const { userRole, userData } = useContext(authContext);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -39,6 +39,7 @@ const ProductData = () => {
   const [isAlreadyInCart, setIsAlreadyInCart] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -77,17 +78,21 @@ const ProductData = () => {
   }, [id]);
 
   const checkInWishlist = async () => {
+    setLoading(true);
     if (userData) {
       const response = await apiRequest(
         "GET",
         `/product/check-is-in-wishlist?user=${userData.id}&product=${id}`
       );
       if (response.data.data === "yes") {
+        setLoading(false);
         setIsWishlisted(true);
       } else {
+        setLoading(false);
         setIsWishlisted(false);
       }
     } else {
+      setLoading(false);
       setIsWishlisted(false);
     }
   };
@@ -99,12 +104,16 @@ const ProductData = () => {
     }
     setIsWishlisted(!isWishlisted);
     try {
+      setLoading(true);
       const response = await apiRequest(
         "PATCH",
         `/user/updating-user-wishlist/${id}`
       );
+      await getCount();
+      setLoading(false);
       toast.success(response.data.message);
     } catch (error) {
+      setLoading(false);
       toast.error(error.response.data.message);
     }
   };
@@ -121,19 +130,35 @@ const ProductData = () => {
       size: selectedSize,
       quantity,
     };
-    const response = await apiRequest("POST", `/user/add-to-cart/${id}`, data);
-    setIsAlreadyInCart(true);
-    toast.success(response.data.message);
+    try {
+      setLoading(true);
+      const response = await apiRequest(
+        "POST",
+        `/user/add-to-cart/${id}`,
+        data
+      );
+      await getCount();
+      setIsAlreadyInCart(true);
+      setLoading(false);
+      toast.success(response.data.message);
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.response.data.message);
+    }
   };
 
   const productDelete = async () => {
+    setLoading(true);
     const response = await apiRequest("DELETE", `/product/${id}`);
+    setLoading(false);
     toast.success(response.data.message);
     navigate("/");
   };
   const sizeClickHandler = (size) => {
+    setLoading(true);
     setSelectedSize(size);
     setIsSizeSelected(true);
+    setLoading(false);
   };
 
   return loading ? (
@@ -244,14 +269,14 @@ const ProductData = () => {
           )}
           {!isWishlisted ? (
             <button
-              className={"border border-red-500 py-2 px-7"}
+              className={"border border-red-500 py-2 px-7 mt-2 lg:mt-0"}
               onClick={wishlistHandler}
             >
               <FavoriteBorderIcon /> ADD TO WISHLIST
             </button>
           ) : (
             <button
-              className={"border border-red-500 py-2 px-7"}
+              className={"border border-red-500 py-2 px-7 mt-2 lg:mt-0"}
               onClick={wishlistHandler}
             >
               <FavoriteIcon /> ADDED TO WISHLIST
@@ -296,7 +321,7 @@ const ProductData = () => {
           productDelete();
           setIsModalOpen(false);
         }}
-        image={data.images[0].url}
+        image={data?.images && data.images.length > 0 ? data.images[0].url : ''}
         text1={data.name}
         text2={"Are u sure you want to delete this product"}
       />

@@ -8,9 +8,9 @@ import ConfirmationModal from "./modals/ConfirmationModal";
 import LogOutModal from "./modals/LogOutModal";
 
 const ProfileLeft = ({ firstname, lastname }) => {
-
   const navigate = useNavigate();
-  const { userData, setIsLog, setUserData, setUserRole } = useContext(authContext);
+  const { userData, setIsLog, setUserData, setUserRole } =
+    useContext(authContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
 
@@ -67,8 +67,9 @@ const ProfileLeft = ({ firstname, lastname }) => {
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => {
           deleteAccountHandler();
-          setIsModalOpen(false); // Close the modal after confirming
+          setIsModalOpen(false);
         }}
+        text={"Are you sure you want to delete your account?"}
       />
       <LogOutModal
         isOpen={isLogModalOpen}

@@ -8,14 +8,12 @@ import LoaderModal from "./components/modals/LoaderModal";
 function App() {
   const { isLoading } = useContext(authContext);
 
-  return isLoading ?
-  (
+  return isLoading ? (
     <LoaderModal isOpen={isLoading} text={"Wait for a second.."} />
-  ) : 
-  (
+  ) : (
     <>
       <Routes />
-      <ToastContainer autoClose={2000} />
+      <ToastContainer autoClose={2000} style={{ marginTop: "100px" }} />
     </>
   );
 }

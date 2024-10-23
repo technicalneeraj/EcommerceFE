@@ -91,7 +91,6 @@ const AddProduct = () => {
       <h1 className="text-2xl font-semibold text-center mb-4">
         Add New Product
       </h1>
-      {loading && <div className="loader">Adding Product.....</div>}
       <form className="space-y-4" onSubmit={handleSubmit}>
         <input
           type="text"

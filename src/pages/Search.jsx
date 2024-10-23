@@ -10,8 +10,8 @@ const Search = () => {
 
   const location = useLocation();
   const { userData } = useContext(authContext);
-  const q = queryParams.get("q");
   const queryParams = new URLSearchParams(location.search);
+  const q = queryParams.get("q");
   const [products, setProducts] = useState([]);
   const { currentCategory } = useCategory();
   const [similarProducts, setSimilarProducts] = useState([]);

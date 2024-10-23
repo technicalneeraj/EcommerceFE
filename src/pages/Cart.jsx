@@ -3,13 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loadStripe } from "@stripe/stripe-js";
 
+import { useCartWishlist } from "../utility/CartWishlistContext";
 import { authContext } from "../utility/AuthContext";
 import { apiRequest } from "../utility/Api";
 import YesOrNoModal from "../components/modals/YesOrNoModal";
+import LoaderModal from "../components/modals/LoaderModal";
 
 const Cart = () => {
 
   const navigate = useNavigate();
+  const { getCount } = useCartWishlist();
   const { isLog, userData } = useContext(authContext);
   const [cart, setCart] = useState("");
   const [items, setItems] = useState([]);
@@ -19,83 +22,104 @@ const Cart = () => {
   const shirtSize = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
   const [defaultAddress, setDefaultAddress] = useState({});
   const quantity = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
+  const [isLoading, setIsLoading] = useState(false);
+ 
   useEffect(() => {
     if (isLog) {
+      setIsLoading(true);
       const fetchingCart = async () => {
         const response = await apiRequest("GET", "/user/cart");
         setCart(response.data.cart);
         setItems(response.data.cart.cartItems);
       };
       fetchingCart();
-      setDefaultAddress(
-        userData.address.find((addr) => addr.isDefault === true)
-      );
+      setDefaultAddress(userData.address.find((addr) => addr.isDefault === true));
+      setIsLoading(false);
     }
-  }, [isLog, cart, items, defaultAddress]);
+  }, [isLog, cart, items, userData]);
+
 
   const removeItemHandler = async (id) => {
-    const response = await apiRequest("PATCH", `/user/update-cart/${id}`);
-    toast.success(response.data.message);
-    const updatedResponse = await apiRequest("GET", "/user/cart");
-    setCart(updatedResponse.data.cart);
-    setItems(updatedResponse.data.cart.cartItems);
+    try {
+      setIsLoading(true);
+      const response = await apiRequest("PATCH", `/user/update-cart/${id}`);
+      toast.success(response.data.message);
+      await getCount();
+      const updatedResponse = await apiRequest("GET", "/user/cart");
+      setCart(updatedResponse.data.cart);
+      setItems(updatedResponse.data.cart.cartItems);
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   const addToWishlistHandler = async (id) => {
     try {
+      setIsLoading(true);
       const response = await apiRequest(
         "PATCH",
         `/user/remove-from-cart-add-to-wishlist/${id}`
       );
+      await getCount();
+      setIsLoading(false);
       toast.success("Product added to your wishlist");
     } catch (error) {
+      setIsLoading(false);
       toast.error(error.response.data.message);
     }
   };
 
   const sizeSetHandler = async (item, currSize) => {
     try {
+      setIsLoading(true);
       await apiRequest("PATCH", `/user/update-cartItem-size/${item._id}`, {
         currSize,
       });
+      setIsLoading(false);
       toast.success("Size updated Successfully");
     } catch (error) {
+      setIsLoading(false);
       toast.error(error.response.data.message);
     }
   };
 
   const quantityHandler = async (item, currQuantity, initialQuantity) => {
     try {
+      setIsLoading(true);
       await apiRequest("PATCH", `/user/update-cartItem-quantity/${item._id}`, {
         currQuantity,
         initialQuantity,
       });
+      setIsLoading(false);
       toast.success("Quantity updated Successfully");
     } catch (error) {
+      setIsLoading(false);
       toast.error(error.response.data.message);
     }
-    console.log(item);
-    console.log(currQuantity);
   };
 
   const makePayment = async () => {
+    setIsLoading(true);
     const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
     const response = await apiRequest("POST", "/user/create-checkout-session", {
       cart,
     });
+    setIsLoading(false);
     const result = stripe.redirectToCheckout({
       sessionId: response.data.id,
     });
     toast.success("Your order is maded");
     if (result.error) {
+      setIsLoading(false);
       toast.error(result.error);
     }
   };
 
   return (
     <div>
+      <LoaderModal isOpen={isLoading} text={"Wait for a second"} />
       <div className="text-center text-gray-700 font-bold">
         MY BAG -------- ADDRESS -------- PAYMENT
       </div>
@@ -105,23 +129,24 @@ const Cart = () => {
             <div>
               {defaultAddress ? (
                 <div className="border pt-2 pl-2 pb-2 flex justify-between items-center">
-                  <div >
-                  <div className="font-bold">
-                    Deliver To: {defaultAddress.firstName}{" "}
-                    {defaultAddress.lastName}, {defaultAddress.postalCode}
-                  </div>
                   <div>
-                    {defaultAddress.buildingName}, {defaultAddress.street} 
+                    <div className="font-bold">
+                      Deliver To: {defaultAddress.firstName}{" "}
+                      {defaultAddress.lastName}, {defaultAddress.postalCode}
+                    </div>
+                    <div>
+                      {defaultAddress.buildingName}, {defaultAddress.street}
+                    </div>
+                    <div>
+                      {defaultAddress.city} ,{defaultAddress.state}
+                    </div>
                   </div>
-                  <div>
-                    {defaultAddress.city} ,{defaultAddress.state}
+                  <div className="mr-2 font-bold text-green-900">
+                    <button onClick={() => navigate("/profile-address")}>
+                      CHANGE
+                    </button>
                   </div>
                 </div>
-                <div className="mr-2 font-bold text-green-900">
-                  <button onClick={()=>navigate("/profile-address")}>CHANGE</button>
-                </div>
-                  </div>
-                 
               ) : (
                 <div></div>
               )}
