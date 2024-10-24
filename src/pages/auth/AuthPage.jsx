@@ -25,12 +25,12 @@ const AuthPage = () => {
 
   return (
     
-    <div className="flex justify-center mr-24 ml-24 outest bg-slate-200">
-      <div className="mr-24 ml-24 mt-4 mb-4 bg-white">
+    <div className="flex justify-center outest bg-slate-200 overflow-hidden">
+      <div className="mt-4 mb-4">
         <div className="mb-4 mt-4 text-center">
           <b>Shoper</b>
         </div>
-        <div className="text-center buttons">
+        <div className="text-center buttons overflow-hidden">
           <button
             className={`px-16 border p-2 border-green-500 ${loginpage ? "bg-green-800 text-white" : "bg-white text-black"}`}
             onClick={loginhandle}
@@ -38,7 +38,7 @@ const AuthPage = () => {
             LOGIN
           </button>
           <button
-            className={`px-16 border p-2 border-green-500 ${!loginpage ? "bg-green-800 text-white" : "bg-white text-black"}`}
+            className={`px-16 border mt-2 sm:mt-2 p-2 border-green-500 ${!loginpage ? "bg-green-800 text-white" : "bg-white text-black"}`}
             onClick={registerhandle}
           >
             REGISTER

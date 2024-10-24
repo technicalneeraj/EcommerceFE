@@ -56,7 +56,7 @@ function Routes() {
         <Route element={<PrivateRoutes />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile-address" element={<Address />} />
-          <Route path="/verify" element={<VerifyOrder />} />
+          <Route path="/verify" element={<VerifyOrder />} /> 
           <Route path="/myOrders" element={<MyOrders/>}/>
           <Route element={<AdminRoutes />}>
             <Route path="/edit-product/:id" element={<EditProduct />} />

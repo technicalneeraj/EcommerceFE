@@ -27,9 +27,9 @@ const Wishlist = () => {
   return (
     <div>
       {itemsCount === 0 ? (
-        <div className="flex flex-col flex-wrap items-center">
+        <div className="flex flex-col flex-wrap items-center m-5 sm:m-0">
           <img
-            className="h-96 p-3"
+            className="sm:h-96 p-3 "
             src="https://www.thesouledstore.com/static/img/wishList-empty-icon.fd2a993.png"
           ></img>
           <div className="font-extrabold text-xl">

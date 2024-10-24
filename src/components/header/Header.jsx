@@ -205,7 +205,7 @@ const Header = () => {
           )}
         </div>
 
-        <div className="flex items-center space-x-4 pr-4">
+        <div className="flex items-center space-x-4">
           <div
             className={`flex p-2 ${searchHovered ? "bg-gray-200" : ""}`}
             onMouseLeave={() => setSearchHovered(false)}
@@ -299,14 +299,19 @@ const Header = () => {
             )}
           </div>
 
-          <div className="md:hidden" onMouseEnter={() => setIsMoreOpen(true)}>
+          <div
+            className="md:hidden"
+            onClick={()=>setIsMoreOpen(!{isMoreOpen})}
+            onMouseEnter={() => setIsMoreOpen(true)}
+            onMouseLeave={() => setIsMoreOpen(false)}
+          >
             <div className="relative">
               <MoreVertIcon />
               {isMoreOpen && (
                 <div
-                  className="bg-white z-50 cursor-pointer absolute -left-12 w-28 top-12 text-center flex items-center space-y-2 justify-center flex-col"
-                  onMouseLeave={() => setIsMoreOpen(false)}
+                  className="bg-white z-50 cursor-pointer absolute -left-24 w-28 top-12 text-center flex items-center space-y-1 justify-center flex-col"
                   onMouseEnter={() => setIsMoreOpen(true)}
+                  onMouseLeave={() => setIsMoreOpen(false)}
                 >
                   {userRole === "admin" && (
                     <div

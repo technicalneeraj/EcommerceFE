@@ -50,7 +50,7 @@ const WishlistCard = ({ item }) => {
 
   return (
     <>
-      <div className="cursor-pointer flex flex-col bg-white shadow-lg rounded-lg mx-3 w-[23rem] h-[36rem] mb-5">
+      <div className="cursor-pointer flex flex-col bg-white shadow-lg rounded-lg mx-3 w-[23rem] h-[36rem] my-3">
         <div className="relative overflow-hidden">
           <div
             className="h-[36rem] w-[23rem]"

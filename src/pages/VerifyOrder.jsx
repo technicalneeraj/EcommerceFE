@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { apiRequest } from "../utility/Api";
@@ -16,7 +16,7 @@ const VerifyOrder = () => {
     try {
       setIsLoading(true);
       console.log(success);
-      await apiRequest("POST","/user/verify-order", { success, orderId });
+      await apiRequest("POST", "/user/verify-order", { success, orderId });
       toast.success("Your order is maded");
       navigate("/myOrders");
       setIsLoading(false);
@@ -28,6 +28,9 @@ const VerifyOrder = () => {
   };
 
   useEffect(() => {
+    if (!success || !orderId) {
+      return navigate("/");
+    }
     verifyPayment();
   }, []);
 

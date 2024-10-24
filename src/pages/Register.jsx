@@ -83,14 +83,14 @@ const Register = () => {
                 type="text"
                 value={firstname}
                 onChange={(e) => setFirstname(e.target.value)}
-                className="p-2 rounded-xl  border border-gray-300 focus:ring"
+                className="p-2 rounded-xl w-full sm:w-1/2 border border-gray-300 focus:ring"
                 placeholder=" First Name*"
               />
               <input
                 type="text"
                 value={lastname}
                 onChange={(e) => setLastname(e.target.value)}
-                className="lastname border border-gray-300 p-2 rounded-xl focus:ring"
+                className="lastname border w-full sm:w-1/2 border-gray-300 p-2 mt-3 sm:mt-0 rounded-xl focus:ring"
                 placeholder=" Last Name*"
               />
             </div>

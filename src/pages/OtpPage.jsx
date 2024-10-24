@@ -66,7 +66,7 @@ const OtpPage = ({ email, firstname, lastname, phone, password }) => {
     {/* <span onClick={handleEditClick} className='bg-blue-400 text-orange-50 ml-3 p-1 cursor-pointer'>Edit</span> */}
     <br/>
     <input type='text' id='otp' value={otp} onChange={(e)=>setOtp(e.target.value)} className='py-3 px-3 mt-5' placeholder="Enter otp..."></input>
-    <button type='submit' className='bg-blue-400 text-white py-3 ml-2 px-3'>Verify</button>
+    <button type='submit' className='bg-blue-400 text-white py-3 ml-2 px-3 mt-2 lg:mt-0'>Verify</button>
    </form>
    {
         respmsg? <div className='text-center'>{respmsg}</div>:<div></div>

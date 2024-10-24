@@ -34,16 +34,15 @@ const ProductData = () => {
   const [tags, setTags] = useState([]);
   const [selectedSize, setSelectedSize] = useState(null);
   const shirtSizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL"];
-  const jeansSizes=["28","30","32","34","36"];
+  const jeansSizes = ["28", "30", "32", "34", "36"];
   const [descriptionClick, setDescriptionClick] = useState(false);
   const [isSizeSelected, setIsSizeSelected] = useState(true);
   const [isAlreadyInCart, setIsAlreadyInCart] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [isUpper,setIsUpper]=useState(true);
-  const [inStock,setInStock]=useState(true);
-  const [stock,setStock]=useState(0);
-
+  const [isUpper, setIsUpper] = useState(true);
+  const [inStock, setInStock] = useState(true);
+  const [stock, setStock] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -52,9 +51,8 @@ const ProductData = () => {
         setData(response.data.product);
         setCategory(response.data.product.category.type);
         setIsUpper(response.data.product.category.parent.includes("upper"));
-        setInStock(response.data.product.stock>0);
+        setInStock(response.data.product.stock > 0);
         setStock(response.data.product.stock);
-
         if (
           response.data.product.tags &&
           response.data.product.tags.length > 0
@@ -165,12 +163,16 @@ const ProductData = () => {
       <LoaderModal isOpen={loading} text={"Wait for a while..."} />
     </>
   ) : (
-    <div className="container pl-16 md:pl-0 mx-auto flex md:flex-row flex-col-reverse justify-center">
+    <div className="container  md:pl-0 mx-auto flex md:flex-row flex-col-reverse justify-center">
       <div className="left1 p-4">
         <div className="flex flex-wrap items-center justify-center">
+          <div className="sm:hidden font-bold">Other Images</div>
           {data.images &&
-            data.images.map((image) => (
-              <div className="p-2" key={image.url}>
+            data.images.map((image, index) => (
+              <div
+                className={`p-2 ${index === 0 ? "hidden sm:block" : ""}`}
+                key={image.url}
+              >
                 <img src={image.url} alt="Product" className="w-full" />
               </div>
             ))}
@@ -197,7 +199,14 @@ const ProductData = () => {
             </button>
           </div>
         )}
+        {data.images && (
+          <div className="sm:hidden">
+            <img src={data.images[0].url}></img>
+          </div>
+        )}
+
         <hr />
+
         <div>
           <div>
             {data.discountPrice > 0 ? (
@@ -219,30 +228,27 @@ const ProductData = () => {
         </div>
         <div className="font-bold">Please select a size.</div>
         <div className="flex space-x-3 flex-wrap md:flex-nowrap">
-          {
-            isUpper ?(shirtSizes.map((size) => (
-              <div
-                key={size}
-                className={`border-2 rounded-3xl pr-3 pl-3 pt-2 pb-2 cursor-pointer 
-                  ${selectedSize === size ? "border-black" : "border-gray-400"}`}
-                onClick={() => sizeClickHandler(size)}
-              >
-                {size}
-              </div>
-            ))):(
-              jeansSizes.map((size) => (
+          {isUpper
+            ? shirtSizes.map((size) => (
                 <div
                   key={size}
-                  className={`border-2 rounded-3xl pr-3 pl-3 pt-2 pb-2 cursor-pointer 
-                    ${selectedSize === size ? "border-black" : "border-gray-400"}`}
+                  className={`border-2 mb-2 sm:mb-0 rounded-3xl pr-3 pl-3 pt-2 pb-2 cursor-pointer 
+                  ${selectedSize === size ? "border-black" : "border-gray-400"}`}
                   onClick={() => sizeClickHandler(size)}
                 >
                   {size}
                 </div>
               ))
-            )
-          }
-         
+            : jeansSizes.map((size) => (
+                <div
+                  key={size}
+                  className={`border-2 rounded-3xl mb-2 sm:mb-0 pr-3 pl-3 pt-2 pb-2 cursor-pointer 
+                    ${selectedSize === size ? "border-black" : "border-gray-400"}`}
+                  onClick={() => sizeClickHandler(size)}
+                >
+                  {size}
+                </div>
+              ))}
         </div>
         {!isSizeSelected && (
           <div className="border bg-red-400 p-3">Please select a size.</div>
@@ -264,42 +270,47 @@ const ProductData = () => {
             ))}
           </select>
         </div>
-        <div className="mt-5 flex">
-          {!isAlreadyInCart ? (
-            <button
-            className={`py-2 px-5 mr-2 ${inStock ? 'bg-red-700 text-white' : 'bg-gray-400 text-gray-200 cursor-not-allowed font-bold'}`}
-              onClick={addToCartHandler}
-              disabled={!inStock}
-            >
-              ADD TO CART
-            </button>
-          ) : (
-            <button
-              className={"bg-green-700 text-white py-2 px-5 mr-2"}
-              onClick={() => navigate("/cart")}
-            >
-              GO TO CART
-            </button>
-          )}
-          {!isWishlisted ? (
-            <button
-              className={"border border-red-500 py-2 px-5 mt-2 lg:mt-0"}
-              onClick={wishlistHandler}
-            >
-              <FavoriteBorderIcon /> ADD TO WISHLIST
-            </button>
-          ) : (
-            <button
-              className={"border border-red-500 py-2 px-5 mt-2 lg:mt-0"}
-              onClick={wishlistHandler}
-            >
-              <FavoriteIcon /> ADDED TO WISHLIST
-            </button>
-          )}
+        <div className="mt-5 flex flex-col lg:flex-row">
+          <div className="w-full mb-2 lg:mb-0">
+            {!isAlreadyInCart ? (
+              <button
+                className={`py-2 px-5 w-full ${inStock ? "bg-red-700 text-white" : "bg-gray-400 text-gray-200 cursor-not-allowed font-bold"}`}
+                onClick={addToCartHandler}
+                disabled={!inStock}
+              >
+                ADD TO CART
+              </button>
+            ) : (
+              <button
+                className="bg-green-700 text-white py-2 px-5 w-full"
+                onClick={() => navigate("/cart")}
+              >
+                GO TO CART
+              </button>
+            )}
+          </div>
+          <div className="w-full lg:ml-2">
+            {!isWishlisted ? (
+              <button
+                className="border border-red-500 py-2 px-5 w-full"
+                onClick={wishlistHandler}
+              >
+                <FavoriteBorderIcon /> ADD TO WISHLIST
+              </button>
+            ) : (
+              <button
+                className="border border-red-500 py-2 px-5 w-full"
+                onClick={wishlistHandler}
+              >
+                <FavoriteIcon /> ADDED TO WISHLIST
+              </button>
+            )}
+          </div>
         </div>
-        {
-          !inStock && <div className="text-red-700">Currently Out of Stock!!</div>
-        }
+
+        {!inStock && (
+          <div className="text-red-700">Currently Out of Stock!!</div>
+        )}
         <div className="mt-3 flex space-x-2">
           <div>Share</div>
           <FacebookShareButton url={productUrl} quote={data.description}>
@@ -318,7 +329,7 @@ const ProductData = () => {
         </div>
         <div className="pt-5">
           <div
-            className="border w-96 p-2 border-gray-300 cursor-pointer"
+            className="border sm:w-96 p-2 border-gray-300 cursor-pointer"
             onClick={() => setDescriptionClick(!descriptionClick)}
           >
             <div className="flex justify-between">
@@ -338,7 +349,7 @@ const ProductData = () => {
           productDelete();
           setIsModalOpen(false);
         }}
-        image={data?.images && data.images.length > 0 ? data.images[0].url : ''}
+        image={data?.images && data.images.length > 0 ? data.images[0].url : ""}
         text1={data.name}
         text2={"Are u sure you want to delete this product"}
       />

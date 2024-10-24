@@ -47,10 +47,10 @@ const Profile = () => {
 
   return (
     <>
-      <div className="flex justify-center">
+      <div className="flex justify-center flex-wrap">
         <ProfileLeft firstname={firstname} lastname={lastname} />
-        <div className="flex flex-col mb-3">
-          <div>
+        <div className="flex flex-col flex-wrap justify-center items-center mb-3 mt-3 sm:mt-0">
+          <div className="sm:w-full w-80" >
             <div className="mb-2 text-gray-400">EDIT PROFILE</div>
             <div className="border p-6">
               <div>Email Id</div>
@@ -62,7 +62,7 @@ const Profile = () => {
               ></input>
             </div>
           </div>
-          <div className="flex">
+          <div className="flex flex-wrap justify-center">
             <div className="border p-6 space-y-3">
               <div>General Information</div>
               <div>First Name*</div>

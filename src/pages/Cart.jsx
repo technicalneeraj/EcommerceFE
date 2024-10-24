@@ -237,7 +237,7 @@ const Cart = () => {
                           )}
                         </div>
                       </div>
-                      <div className="flex md:flex-col flex-nowrap flex-row font-bold md:mt-0 mt-2">
+                      <div className="flex md:flex-col lg:flex-nowrap flex-wrap flex-row font-bold md:mt-0 mt-2">
                         <div className="md:mr-0 mr-2">
                           {item.product.discountPrice > 0 ? (
                             <div className="flex space-x-2 justify-end">
@@ -339,7 +339,7 @@ const Cart = () => {
             alt="Empty Cart"
           />
           <div className="font-bold text-xl">Your shopping cart is empty.</div>
-          <div className="text-gray-500">
+          <div className="text-gray-500 text-center">
             Please add something soon, carts have feelings too.
           </div>
           <div>

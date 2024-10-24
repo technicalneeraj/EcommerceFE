@@ -9,16 +9,13 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { apiRequest } from "../../utility/Api";
 import { useCategory } from "../../utility/CategoryContext";
 
-
 const MainCarousel = () => {
-
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { currentCategory } = useCategory();
   const carouselRef = useRef(null);
   const [data, setData] = useState([]);
-  const [child,setChild]=useState("");
-  
-  
+  const [child, setChild] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,16 +33,18 @@ const MainCarousel = () => {
 
   const items = data.map((item) => {
     // setChild(item.category.split(',')[0])
-    return(
-    <img
-      className="cursor-pointer w-full"
-      role="presentation"
-      src={item.image}
-      alt="carouselimage"
-      onClick={()=>navigate(`/${currentCategory}/${item.category.split(',')[0]}`)}
-    />
+    return (
+      <img
+        className="cursor-pointer w-full"
+        role="presentation"
+        src={item.image}
+        alt="carouselimage"
+        onClick={() =>
+          navigate(`/${currentCategory}/${item.category.split(",")[0]}`)
+        }
+      />
     );
-});
+  });
 
   const goToNext = () => {
     carouselRef.current.slideNext();
@@ -54,7 +53,7 @@ const MainCarousel = () => {
   const goToPrev = () => {
     carouselRef.current.slidePrev();
   };
-  
+
   return (
     <>
       <div className="flex justify-center relative items-center">
@@ -66,13 +65,19 @@ const MainCarousel = () => {
           disableButtonsControls
           infinite
         />
-        <div className="absolute top-1/2 left-4">
-          <button onClick={goToPrev} className="rounded">
+        <div className="absolute top-1/2 left-4 hidden sm:flex items-center">
+          <button
+            onClick={goToPrev}
+            className="rounded p-2 bg-gray-200 hover:bg-gray-300 transition"
+          >
             <ArrowBackIosIcon />
           </button>
         </div>
-        <div className="absolute top-1/2 right-4">
-          <button onClick={goToNext} className="rounded">
+        <div className="absolute top-1/2 right-4 hidden sm:flex items-center">
+          <button
+            onClick={goToNext}
+            className="rounded p-2 bg-gray-200 hover:bg-gray-300 transition"
+          >
             <ArrowForwardIosIcon />
           </button>
         </div>

@@ -42,7 +42,7 @@ const ProductCard = ({ imageUrl, ID, isFavoriteInDb }) => {
   return (
     <>
       <LoaderModal isOpen={isLoading} text={"Wait for a second"} />
-      <div className="relative cursor-pointer flex flex-col items-center bg-white shadow-lg rounded-lg overflow-hidden mx-3 w-[23rem] h-[36rem] mb-4 mt-4">
+      <div className="relative cursor-pointer flex flex-col items-center bg-white shadow-lg rounded-lg overflow-hidden mx-3 w-[23rem] h-[36rem] mb-4 mt-4 mr-3 ml-3">
         <div className="h-[36rem] w-[23rem]">
           <img
             onClick={() => navigate(`/product/${ID}`)}

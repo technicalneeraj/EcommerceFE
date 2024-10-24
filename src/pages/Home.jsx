@@ -52,7 +52,7 @@ const Home = () => {
         ))}
       </div>
       <h1 className="text-2xl font-extrabold py-5 text-center">New Arrivals</h1>
-      <div>
+      <div className="overflow-hidden">
         <Product />
       </div>
     </>
