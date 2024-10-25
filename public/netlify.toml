@@ -1,0 +1,21 @@
+[build]
+  publish = "dist" # The directory that will be published. Change to your build output directory.
+  command = "npm run build" # The build command. Change if you're using a different command.
+
+[dev]
+  command = "npm start" # The command to start your development server.
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[headers]
+  /* Add custom headers */
+  /* Add a cache control header */
+  /* You can customize these headers based on your requirements */
+  [[headers]]
+    for = "/*"
+    [headers.values]
+      Cache-Control = "no-cache"
